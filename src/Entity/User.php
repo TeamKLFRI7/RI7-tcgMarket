@@ -28,7 +28,7 @@ class User
     private ?bool $is_admin = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $create_time = null;
+    private ?\DateTimeInterface $create_at = null;
 
     #[ORM\OneToOne(mappedBy: 'fk_user_id', cascade: ['persist', 'remove'])]
     private ?UserInfo $userInfo = null;
@@ -38,6 +38,12 @@ class User
 
     #[ORM\OneToMany(mappedBy: 'fk_id_user', targetEntity: CardUser::class)]
     private Collection $cardUsers;
+
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $phoneNumber = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $password = null;
 
     public function __construct()
     {
@@ -86,14 +92,14 @@ class User
         return $this;
     }
 
-    public function getCreateTime(): ?\DateTimeInterface
+    public function getCreateAt(): ?\DateTimeInterface
     {
-        return $this->create_time;
+        return $this->create_at;
     }
 
-    public function setCreateTime(\DateTimeInterface $create_time): self
+    public function setCreateAt(\DateTimeInterface $create_at): self
     {
-        $this->create_time = $create_time;
+        $this->create_at = $create_at;
 
         return $this;
     }
@@ -171,6 +177,30 @@ class User
                 $cardUser->setFkIdUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }
