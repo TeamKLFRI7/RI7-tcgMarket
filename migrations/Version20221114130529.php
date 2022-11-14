@@ -14,7 +14,7 @@ final class Version20221114130529 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Ajout téléphone et password dans entité user';
     }
 
     public function up(Schema $schema): void
