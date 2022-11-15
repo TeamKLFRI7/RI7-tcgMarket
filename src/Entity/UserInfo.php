@@ -28,7 +28,7 @@ class UserInfo
     private ?string $country = null;
 
     #[ORM\Column(length: 55, nullable: true)]
-    #[Assert\Length(min: 7, max: 26)]
+    #[Assert\Length(min: 7, max: 30)]
     private ?string $address = null;
 
     #[ORM\Column(length: 5, nullable: true)]
@@ -39,7 +39,7 @@ class UserInfo
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $delivery_adress = null;
+    private ?string $delivery_address = null;
 
     public function getId(): ?int
     {
@@ -118,14 +118,14 @@ class UserInfo
         return $this;
     }
 
-    public function getDeliveryAdress(): ?string
+    public function getDeliveryAddress(): ?string
     {
-        return $this->delivery_adress;
+        return $this->delivery_address;
     }
 
-    public function setDeliveryAdress(?string $delivery_adress): self
+    public function setDeliveryAddress(?string $delivery_address): self
     {
-        $this->delivery_adress = $delivery_adress;
+        $this->delivery_address = $delivery_address;
 
         return $this;
     }
