@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource]
@@ -19,9 +20,11 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 16)]
+    #[Assert\Length(min: 3, max: 16)]
     private ?string $username = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -40,9 +43,11 @@ class User
     private Collection $cardUsers;
 
     #[ORM\Column(length: 15, nullable: true)]
+    #[Assert\Regex('^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^')]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Length(min: 8, max: 50)]
     private ?string $password = null;
 
     public function __construct()
