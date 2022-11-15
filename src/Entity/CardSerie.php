@@ -23,10 +23,10 @@ class CardSerie
     #[ORM\Column(length: 45)]
     private ?string $serie_name = null;
 
-    #[ORM\Column(length: 45)]
+    #[ORM\Column(length: 255)]
     private ?string $serie_link = null;
 
-    #[ORM\Column(length: 45, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $serie_img = null;
 
     #[ORM\ManyToOne(inversedBy: 'updated_at')]

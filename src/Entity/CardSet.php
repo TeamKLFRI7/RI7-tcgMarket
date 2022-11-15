@@ -52,10 +52,10 @@ class CardSet
     #[ORM\Column(length: 45)]
     private ?string $set_name = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 255)]
     private ?string $set_link = null;
 
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 255)]
     private ?string $set_img = null;
 
     #[ORM\ManyToOne(inversedBy: 'fk_id_card_set')]
