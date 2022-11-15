@@ -14,7 +14,7 @@ class UserTest extends KernelTestCase
             ->setUsername('testUser567')
             ->setEmail('test@email.com')
             ->setIsAdmin(false)
-            ->setCreateAt(new \DateTimeImmutable())
+            ->setCreatedAt(new \DateTimeImmutable())
             ->setPassword('testpasssword69E.=')
             ->setPhoneNumber('0634567890');
     }
