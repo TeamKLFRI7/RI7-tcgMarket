@@ -28,7 +28,7 @@ class User
     private ?bool $is_admin = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $create_at = null;
+    private ?\DateTimeInterface $created_at = null;
 
     #[ORM\OneToOne(mappedBy: 'fk_user_id', cascade: ['persist', 'remove'])]
     private ?UserInfo $userInfo = null;
@@ -92,14 +92,14 @@ class User
         return $this;
     }
 
-    public function getCreateAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->create_at;
+        return $this->created_at;
     }
 
-    public function setCreateAt(\DateTimeInterface $create_at): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->create_at = $create_at;
+        $this->created_at = $created_at;
 
         return $this;
     }
