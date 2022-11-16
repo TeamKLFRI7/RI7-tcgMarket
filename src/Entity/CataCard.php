@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CataCardRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CataCardRepository::class)]
 #[ApiResource]
@@ -23,12 +24,15 @@ class CataCard
     private ?int $api_card_id = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["set:item:get"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["set:item:get"])]
     private ?string $img = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["set:item:get"])]
     private ?string $cata_card_link = null;
 
     #[ORM\ManyToOne(inversedBy: 'fk_id_cata_card')]

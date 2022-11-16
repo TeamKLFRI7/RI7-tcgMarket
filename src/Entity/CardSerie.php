@@ -3,30 +3,43 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CardSerieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CardSerieRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => 'series:collection:get'],
+        )
+    ]
+)]
 class CardSerie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["series:collection:get"])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSerie', targetEntity: CardSet::class)]
+    #[Groups(["series:collection:get"])]
     private Collection $fk_id_card_set;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["series:collection:get"])]
     private ?string $serie_name = null;
 
     #[ORM\Column(length: 45)]
     private ?string $serie_link = null;
 
     #[ORM\Column(length: 45, nullable: true)]
+    #[Groups(["series:collection:get"])]
     private ?string $serie_img = null;
 
     #[ORM\ManyToOne(inversedBy: 'updated_at')]
