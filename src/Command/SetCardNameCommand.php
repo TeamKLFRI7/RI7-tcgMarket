@@ -3,7 +3,7 @@
 namespace App\Command;
 
 
-use App\Entity\CardSet;
+use App\Entity\CataCard;
 use App\Service\CardHandler;
 use Symfony\Component\Console\Attribute\AsCommand;
 
