@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CardSetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(
-            normalizationContext: ['groups' => 'set:item:get'],
+            normalizationContext: ['groups' => 'set:item:get']
         )
     ]
 )]
@@ -24,11 +23,10 @@ class CardSet
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["series:collection:get", "set:item:get"])]
+    #[Groups(["series:collection:get", 'set:item:get'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CardUser::class)]
-    #[Groups(["set:item:get"])]
     private Collection $fk_id_card;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CataCard::class)]
@@ -97,7 +95,7 @@ class CardSet
     }
 
     /**
-     * @return Collection<int, CataCard>
+     * @return Collection<int, CardSet>
      */
     public function getFkIdCataCard(): Collection
     {

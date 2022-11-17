@@ -7,6 +7,7 @@ use App\Repository\CardUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CardUserRepository::class)]
 #[ApiResource]
@@ -15,6 +16,7 @@ class CardUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["set:item:get", "cardSell:item:get"])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'cardUsers')]
@@ -22,34 +24,39 @@ class CardUser
     private ?User $fk_id_user = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["cardSell:item:get"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["cardSell:item:get"])]
     private ?string $quality = null;
 
     #[ORM\Column]
+    #[Groups(["cardSell:item:get"])]
     private ?int $quantity = null;
 
     #[ORM\Column]
+    #[Groups(["cardSell:item:get"])]
     private ?float $price = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["cardSell:item:get"])]
     private ?string $img = null;
 
     #[ORM\OneToMany(mappedBy: 'fk_id_card', targetEntity: OrderItem::class)]
     private Collection $orderItems;
 
-    #[ORM\OneToMany(mappedBy: 'fk_id_card', targetEntity: CataCard::class)]
-    private Collection $cataCards;
+    #[ORM\ManyToOne(inversedBy: 'fk_id_card')]
+    private ?CataCard $cataCard;
 
     #[ORM\ManyToOne(inversedBy: 'fk_id_card')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CardSet $cardSet = null;
 
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
-        $this->cataCards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -159,44 +166,26 @@ class CardUser
         return $this;
     }
 
-    /**
-     * @return Collection<int, CataCard>
-     */
-    public function getCataCards(): Collection
-    {
-        return $this->cataCards;
-    }
-
-    public function addCataCard(CataCard $cataCard): self
-    {
-        if (!$this->cataCards->contains($cataCard)) {
-            $this->cataCards->add($cataCard);
-            $cataCard->setFkIdCard($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCataCard(CataCard $cataCard): self
-    {
-        if ($this->cataCards->removeElement($cataCard)) {
-            // set the owning side to null (unless already changed)
-            if ($cataCard->getFkIdCard() === $this) {
-                $cataCard->setFkIdCard(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCardSet(): ?CardSet
     {
         return $this->cardSet;
     }
 
-    public function setCardSet(?CardSet $cardSet): self
+    public function setCardSet(?CataCard $cataCard): self
     {
-        $this->cardSet = $cardSet;
+        $this->cataCard = $cataCard;
+
+        return $this;
+    }
+
+    public function getCataCard(): ?CataCard
+    {
+        return $this->cataCard;
+    }
+
+    public function setCataCard(?Catacard $cataCard): self
+    {
+        $this->cataCard = $cataCard;
 
         return $this;
     }
