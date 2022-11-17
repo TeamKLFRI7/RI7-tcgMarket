@@ -171,9 +171,9 @@ class CardUser
         return $this->cardSet;
     }
 
-    public function setCardSet(?CataCard $cataCard): self
+    public function setCardSet(?CardSet $cardSet): self
     {
-        $this->cataCard = $cataCard;
+        $this->cardSet = $cardSet;
 
         return $this;
     }

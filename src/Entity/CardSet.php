@@ -95,7 +95,7 @@ class CardSet
     }
 
     /**
-     * @return Collection<int, CardSet>
+     * @return Collection<int, CataCard>
      */
     public function getFkIdCataCard(): Collection
     {
