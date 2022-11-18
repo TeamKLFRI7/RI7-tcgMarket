@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\CataCard;
+use App\Entity\Card;
 use App\Entity\CardSet;
 use App\Entity\CardSerie;
-use App\Entity\Games;
+use App\Entity\Game;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CardHandler
@@ -33,7 +33,7 @@ class CardHandler
 
     public function createCardSetFromData($data)
     {
-        $game = $this->em->getRepository(Games::class)->findOneBy([
+        $game = $this->em->getRepository(Game::class)->findOneBy([
             'names' => 'Pokemon'
         ]);
 
@@ -43,11 +43,10 @@ class CardHandler
         if (!$card_serie) {
             $card_serie = new CardSerie();
             if ($game) {
-                $card_serie->setGames($game);
+                $card_serie->setFkIdGame($game);
             }
 
             $card_serie->setSerieName($data['set']['series']);
-            $card_serie->setSerieLink('serie LINK');
             $this->em->persist($card_serie);
         }
 
@@ -58,21 +57,20 @@ class CardHandler
             $card_set = new CardSet();
             $card_set->setCardSerie($card_serie);
             $card_set->setApiSetId($data['set']['id']);
-            $card_set->setSetImg($data['set']['images']['logo']);
-            $card_set->setSetLink('set LINK');
+            $card_set->setImg($data['set']['images']['logo']);
             $card_set->setSetName($data['set']['name']);
             $this->em->persist($card_set);
         }
 
         // CARD HANDLING
-        $card = new CataCard();
+        $card = new Card();
         $card->setCardSet($card_set);
         $card->setApiCardId($data['id']);
         $card->setName($data['name']);
         $card->setImg($data['images']['large']);
-        $card->setCataCardLink('no link');
+        $card->setLink('no link');
         if (array_key_exists('cardmarket', $data) == true) {
-            $card->setCataCardLink($data['cardmarket']['url']);
+            $card->setLink($data['cardmarket']['url']);
         }
         $this->em->persist($card);
 

@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Games;
+use App\Entity\Game;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -10,8 +10,8 @@ class GameFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $game = new Games();
-        $game->setNames('Pokemon');
+        $game = new Game();
+        $game->setName('Pokemon');
         $game->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($game);
 
