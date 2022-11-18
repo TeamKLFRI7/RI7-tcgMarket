@@ -23,7 +23,7 @@ class User
 
     #[ORM\Column(length: 16)]
     #[Assert\Length(min: 3, max: 16)]
-    #[Groups(["cardSell:item:get"])]A
+    #[Groups(["cardSell:item:get"])]
     private ?string $username = null;
 
     #[ORM\Column(length: 50, nullable: true)]
