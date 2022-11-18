@@ -41,22 +41,28 @@ class SetCardNameCommand extends Command
         $pages = $this->client->request('GET', 'https://api.pokemontcg.io/v2/cards', [
             'headers' => [
                 'Accept' => 'application/json',
-                'x-api-key' => 'c3bdef54-d130-4602-9fc2-060e5b513ffc',
+                'x-api-key' => '1db10c62-e29f-4189-93aa-ef100c275005',
             ],
         ]);
 
         $maxPages = $pages->toArray();
+        $output->writeln([
+            ' ',
+            'maxPages : '. $maxPages['pageSize'],
+        ]);
 
         while ($nb <= $maxPages['pageSize']) {
+            
             $output->writeln([
-                'maxPages : '. $maxPages['pageSize'],
-                'actual Page : '. $nb,
+                ' ',
+                'actual Page : '. $nb . '/' . $maxPages['pageSize'],
             ]);
 
             $response = $this->client->request('GET', 'https://api.pokemontcg.io/v2/cards?page='.$nb, [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'x-api-key' => 'c3bdef54-d130-4602-9fc2-060e5b513ffc',
+                    'x-api-key' => '1db10c62-e29f-4189-93aa-ef100c275005'
+                    ,
                 ],
             ]);
     
@@ -69,7 +75,7 @@ class SetCardNameCommand extends Command
                 $this->ph->createCardSetFromData($pokemon);
             }
 
-            sleep(0.5);
+            sleep(1);
 
             $nb += 1;
             $progressBar->finish();

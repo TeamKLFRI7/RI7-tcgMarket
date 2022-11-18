@@ -19,7 +19,6 @@ class CardHandler
          $serieName = $this->em->getRepository(CardSerie::class)->findOneBy([
             'serie_name' => $cardSerieName
         ]);
-        dump(gettype($serieName));
         return $serieName;
     }
 
@@ -29,7 +28,6 @@ class CardHandler
         $setId = $this->em->getRepository(CardSet::class)->findOneBy([
             'api_set_id' => $cardSetId
         ]);
-        dump($setId);
         return $setId;
     }
 
@@ -41,8 +39,6 @@ class CardHandler
 
         // CARD SERIE HANDLING
         $cardSerieName = $data['set']['series'];
-        dump($cardSerieName);
-        dump($this->isCardSerieExist($cardSerieName));
         $card_serie = $this->isCardSerieExist($cardSerieName);
         if (!$card_serie) {
             $card_serie = new CardSerie();
@@ -74,7 +70,10 @@ class CardHandler
         $card->setApiCardId($data['id']);
         $card->setName($data['name']);
         $card->setImg($data['images']['large']);
-        $card->setCataCardLink($data['cardmarket']['url']);
+        $card->setCataCardLink('no link');
+        if (array_key_exists('cardmarket', $data) == true) {
+            $card->setCataCardLink($data['cardmarket']['url']);
+        }
         $this->em->persist($card);
 
         $this->em->flush();
