@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserInfoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserInfoRepository::class)]
 #[ApiResource]
@@ -20,22 +21,25 @@ class UserInfo
     private ?User $fk_user_id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Length(max: 45)]
     private ?string $city = null;
 
     #[ORM\Column(length: 45, nullable: true)]
     private ?string $country = null;
 
     #[ORM\Column(length: 55, nullable: true)]
-    private ?string $adress = null;
+    #[Assert\Length(min: 7, max: 30)]
+    private ?string $address = null;
 
     #[ORM\Column(length: 5, nullable: true)]
+    #[Assert\Regex('/^(?:0[1-9]|[1-8]\d|9[0-8])\d{3}$/')]
     private ?string $zip_code = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $delivery_adress = null;
+    private ?string $delivery_address = null;
 
     public function getId(): ?int
     {
@@ -78,14 +82,14 @@ class UserInfo
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getAddress(): ?string
     {
-        return $this->adress;
+        return $this->address;
     }
 
-    public function setAdress(?string $adress): self
+    public function setAddress(?string $address): self
     {
-        $this->adress = $adress;
+        $this->address = $address;
 
         return $this;
     }
@@ -114,14 +118,14 @@ class UserInfo
         return $this;
     }
 
-    public function getDeliveryAdress(): ?string
+    public function getDeliveryAddress(): ?string
     {
-        return $this->delivery_adress;
+        return $this->delivery_address;
     }
 
-    public function setDeliveryAdress(?string $delivery_adress): self
+    public function setDeliveryAddress(?string $delivery_address): self
     {
-        $this->delivery_adress = $delivery_adress;
+        $this->delivery_address = $delivery_address;
 
         return $this;
     }

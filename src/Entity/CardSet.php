@@ -12,6 +12,7 @@ use App\Repository\CardSetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CardSetRepository::class)]
 #[ApiResource(
@@ -38,24 +39,30 @@ class CardSet
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["series:collection:get", 'set:item:get'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CardUser::class)]
     private Collection $fk_id_card;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CataCard::class)]
+    #[Groups(["set:item:get"])]
     private Collection $fk_id_cata_card;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["series:collection:get"])]
     private ?string $api_set_id = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups(["series:collection:get", "set:item:get"])]
     private ?string $set_name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["series:collection:get"])]
     private ?string $set_link = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["series:collection:get"])]
     private ?string $set_img = null;
 
     #[ORM\ManyToOne(inversedBy: 'fk_id_card_set')]

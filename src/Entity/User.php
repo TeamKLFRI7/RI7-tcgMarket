@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource]
@@ -16,19 +18,23 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["cardSell:item:get"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 16)]
+    #[Assert\Length(min: 3, max: 16)]
+    #[Groups(["cardSell:item:get"])]
     private ?string $username = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column]
     private ?bool $is_admin = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $create_at = null;
+    private ?\DateTimeInterface $created_at = null;
 
     #[ORM\OneToOne(mappedBy: 'fk_user_id', cascade: ['persist', 'remove'])]
     private ?UserInfo $userInfo = null;
@@ -40,9 +46,11 @@ class User
     private Collection $cardUsers;
 
     #[ORM\Column(length: 15, nullable: true)]
+    #[Assert\Regex('^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^')]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Length(min: 8, max: 50)]
     private ?string $password = null;
 
     public function __construct()
@@ -92,14 +100,14 @@ class User
         return $this;
     }
 
-    public function getCreateAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->create_at;
+        return $this->created_at;
     }
 
-    public function setCreateAt(\DateTimeInterface $create_at): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->create_at = $create_at;
+        $this->created_at = $created_at;
 
         return $this;
     }
