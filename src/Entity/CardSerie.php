@@ -35,10 +35,10 @@ class CardSerie
     #[Groups(["series:collection:get"])]
     private ?string $serie_name = null;
 
-    #[ORM\Column(length: 45)]
+    #[ORM\Column(length: 255)]
     private ?string $serie_link = null;
 
-    #[ORM\Column(length: 45, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["series:collection:get"])]
     private ?string $serie_img = null;
 

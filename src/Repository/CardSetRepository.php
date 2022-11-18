@@ -39,6 +39,13 @@ class CardSetRepository extends ServiceEntityRepository
         }
     }
 
+    public function search(string $query) : array {
+        return $this->createQueryBuilder('p')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return CardSet[] Returns an array of CardSet objects
 //     */

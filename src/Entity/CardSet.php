@@ -2,8 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+
 use App\Repository\CardSetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,10 +18,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(
-            normalizationContext: ['groups' => 'set:item:get']
+            normalizationContext: ['groups' => 'cardSet:item:get'],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'cardSet:collection:get'],
+        ),
+        new Get(
+            name: 'custom_search',
+            uriTemplate: '/cardSet/search',
+            controller: CustomSearchController::class
         )
-    ]
+    ],
+    normalizationContext: ['groups' => 'cardSet:read'],
+    denormalizationContext: ['groups' => 'cardSet:write'],
+    paginationItemsPerPage: 10,
 )]
+#[ApiFilter(SearchFilter::class, properties: ['title' => 'exact', 'content' => 'partial'])]
 class CardSet
 {
     #[ORM\Id]
@@ -41,16 +57,16 @@ class CardSet
     #[Groups(["series:collection:get", "set:item:get"])]
     private ?string $set_name = null;
 
-    #[ORM\Column(length: 45)]
+    #[ORM\Column(length: 255)]
     #[Groups(["series:collection:get"])]
     private ?string $set_link = null;
 
-    #[ORM\Column(length: 45)]
+    #[ORM\Column(length: 255)]
     #[Groups(["series:collection:get"])]
     private ?string $set_img = null;
 
     #[ORM\ManyToOne(inversedBy: 'fk_id_card_set')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?CardSerie $cardSerie = null;
 
     public function __construct()

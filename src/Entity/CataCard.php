@@ -26,17 +26,17 @@ class CataCard
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $api_card_id = null;
+    private ?string $api_card_id = null;
 
     #[ORM\Column(length: 45)]
     #[Groups(["cardSell:item:get", "set:item:get"])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 45)]
+    #[ORM\Column(length: 255)]
     #[Groups(["set:item:get"])]
     private ?string $img = null;
 
-    #[ORM\Column(length: 45)]
+    #[ORM\Column(length: 255)]
     private ?string $cata_card_link = null;
 
     #[ORM\ManyToOne(inversedBy: 'fk_id_cata_card')]
@@ -58,12 +58,12 @@ class CataCard
         return $this->id;
     }
 
-    public function getApiCardId(): ?int
+    public function getApiCardId(): ?string
     {
         return $this->api_card_id;
     }
 
-    public function setApiCardId(int $api_card_id): self
+    public function setApiCardId(string $api_card_id): self
     {
         $this->api_card_id = $api_card_id;
 
