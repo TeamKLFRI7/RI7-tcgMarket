@@ -14,7 +14,7 @@ final class Version20221118173019 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'ajout colonne img dans CardUser';
     }
 
     public function up(Schema $schema): void
