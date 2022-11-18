@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use App\Repository\CardUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,6 +22,7 @@ class CardUser
 
     #[ORM\ManyToOne(inversedBy: 'cardUsers')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["cardSell:item:get"])]
     private ?User $fk_id_user = null;
 
     #[ORM\Column(length: 45)]
