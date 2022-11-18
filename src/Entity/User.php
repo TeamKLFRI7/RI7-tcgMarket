@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource]
@@ -21,18 +22,22 @@ class User
 
     #[ORM\Column(length: 50)]
     #[Groups(['cardUser:item:get', 'cardInSell:item:get'])]
+    #[Assert\Length(min: 3, max: 16)]
     private ?string $userName = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column(length: 15, nullable: true)]
+    #[Assert\Regex('^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^')]
     private ?string $phoneNumber = null;
 
     #[ORM\Column]
     private ?bool $isAdmin = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Length(min: 8, max: 50)]
     private ?string $password = null;
 
     #[ORM\Column]

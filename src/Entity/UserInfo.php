@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserInfoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserInfoRepository::class)]
 #[ApiResource]
@@ -21,15 +22,18 @@ class UserInfo
     private ?User $fkIdUser = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(max: 45)]
     private ?string $city = null;
 
     #[ORM\Column(length: 45, nullable: true)]
     private ?string $country = null;
 
     #[ORM\Column(length: 55, nullable: true)]
+    #[Assert\Length(min: 7, max: 30)]
     private ?string $address = null;
 
     #[ORM\Column(length: 5, nullable: true)]
+    #[Assert\Regex('/^(?:0[1-9]|[1-8]\d|9[0-8])\d{3}$/')]
     private ?string $postalCode = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
