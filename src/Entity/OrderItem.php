@@ -17,23 +17,20 @@ class OrderItem
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Command $fk_id_command = null;
+    private ?Command $fkIdCommand = null;
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?CardUser $fk_id_card = null;
-
-    #[ORM\Column]
-    private ?float $quantity = null;
+    private ?CardUser $fkIdCardUser = null;
 
     #[ORM\Column(nullable: true)]
     private ?float $discount = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $creatad_at = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updated_at = null;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -42,36 +39,24 @@ class OrderItem
 
     public function getFkIdCommand(): ?Command
     {
-        return $this->fk_id_command;
+        return $this->fkIdCommand;
     }
 
-    public function setFkIdCommand(?Command $fk_id_command): self
+    public function setFkIdCommand(?Command $fkIdCommand): self
     {
-        $this->fk_id_command = $fk_id_command;
+        $this->fkIdCommand = $fkIdCommand;
 
         return $this;
     }
 
-    public function getFkIdCard(): ?CardUser
+    public function getFkIdCardUser(): ?CardUser
     {
-        return $this->fk_id_card;
+        return $this->fkIdCardUser;
     }
 
-    public function setFkIdCard(?CardUser $fk_id_card): self
+    public function setFkIdCardUser(?CardUser $fkIdCardUser): self
     {
-        $this->fk_id_card = $fk_id_card;
-
-        return $this;
-    }
-
-    public function getQuantity(): ?float
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(float $quantity): self
-    {
-        $this->quantity = $quantity;
+        $this->fkIdCardUser = $fkIdCardUser;
 
         return $this;
     }
@@ -88,26 +73,26 @@ class OrderItem
         return $this;
     }
 
-    public function getCreatadAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->creatad_at;
+        return $this->createdAt;
     }
 
-    public function setCreatadAt(\DateTimeImmutable $creatad_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->creatad_at = $creatad_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

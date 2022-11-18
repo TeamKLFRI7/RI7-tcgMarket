@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CardSerieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,43 +10,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CardSerieRepository::class)]
-#[ApiResource(
-    operations: [
-        new GetCollection(
-            normalizationContext: ['groups' => 'series:collection:get'],
-        )
-    ]
-)]
+#[ApiResource]
 class CardSerie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["series:collection:get"])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSerie', targetEntity: CardSet::class)]
-    #[Groups(["series:collection:get"])]
-    private Collection $fk_id_card_set;
+    #[Groups(['game:series:get'])]
+    private Collection $fkIdCardSet;
 
-    #[ORM\Column(length: 45)]
-    #[Groups(["series:collection:get"])]
-    private ?string $serie_name = null;
-
-    #[ORM\Column(length: 45)]
-    private ?string $serie_link = null;
-
-    #[ORM\Column(length: 45, nullable: true)]
-    #[Groups(["series:collection:get"])]
-    private ?string $serie_img = null;
-
-    #[ORM\ManyToOne(inversedBy: 'updated_at')]
+    #[ORM\ManyToOne(inversedBy: 'cardSeries')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Games $games = null;
+    private ?Game $fkIdGame = null;
+
+    #[ORM\Column(length: 100)]
+    #[Groups(['game:series:get'])]
+    private ?string $serieName = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['game:series:get'])]
+    private ?string $img = null;
 
     public function __construct()
     {
-        $this->fk_id_card_set = new ArrayCollection();
+        $this->fkIdCardSet = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -61,13 +49,13 @@ class CardSerie
      */
     public function getFkIdCardSet(): Collection
     {
-        return $this->fk_id_card_set;
+        return $this->fkIdCardSet;
     }
 
     public function addFkIdCardSet(CardSet $fkIdCardSet): self
     {
-        if (!$this->fk_id_card_set->contains($fkIdCardSet)) {
-            $this->fk_id_card_set->add($fkIdCardSet);
+        if (!$this->fkIdCardSet->contains($fkIdCardSet)) {
+            $this->fkIdCardSet->add($fkIdCardSet);
             $fkIdCardSet->setCardSerie($this);
         }
 
@@ -76,7 +64,7 @@ class CardSerie
 
     public function removeFkIdCardSet(CardSet $fkIdCardSet): self
     {
-        if ($this->fk_id_card_set->removeElement($fkIdCardSet)) {
+        if ($this->fkIdCardSet->removeElement($fkIdCardSet)) {
             // set the owning side to null (unless already changed)
             if ($fkIdCardSet->getCardSerie() === $this) {
                 $fkIdCardSet->setCardSerie(null);
@@ -86,50 +74,38 @@ class CardSerie
         return $this;
     }
 
+    public function getFkIdGame(): ?Game
+    {
+        return $this->fkIdGame;
+    }
+
+    public function setFkIdGame(?Game $fkIdGame): self
+    {
+        $this->fkIdGame = $fkIdGame;
+
+        return $this;
+    }
+
     public function getSerieName(): ?string
     {
-        return $this->serie_name;
+        return $this->serieName;
     }
 
-    public function setSerieName(string $serie_name): self
+    public function setSerieName(string $serieName): self
     {
-        $this->serie_name = $serie_name;
+        $this->serieName = $serieName;
 
         return $this;
     }
 
-    public function getSerieLink(): ?string
+    public function getImg(): ?string
     {
-        return $this->serie_link;
+        return $this->img;
     }
 
-    public function setSerieLink(string $serie_link): self
+    public function setImg(string $img): self
     {
-        $this->serie_link = $serie_link;
-
-        return $this;
-    }
-
-    public function getSerieImg(): ?string
-    {
-        return $this->serie_img;
-    }
-
-    public function setSerieImg(?string $serie_img): self
-    {
-        $this->serie_img = $serie_img;
-
-        return $this;
-    }
-
-    public function getGames(): ?Games
-    {
-        return $this->games;
-    }
-
-    public function setGames(?Games $games): self
-    {
-        $this->games = $games;
+        $this->img = $img;
 
         return $this;
     }
