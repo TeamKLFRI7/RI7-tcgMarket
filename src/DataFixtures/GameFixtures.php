@@ -11,7 +11,7 @@ class GameFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $game = new Games();
-        $game->setNames('Pokémon');
+        $game->setNames('Pokemon');
         $game->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($game);
 

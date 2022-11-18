@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\CataCard;
 use App\Entity\CardSet;
 use App\Entity\CardSerie;
-use App\Repository\GamesRepository;
+use App\Entity\Games;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CardHandler
@@ -14,36 +14,35 @@ class CardHandler
     {
     }
 
-    public function isCardSerieExist(string $cardSerieId) : CardSerie
+    public function isCardSerieExist(string $cardSerieName) : ?CardSerie
     {
-        return $this->em->getRepository(CardSerie::class)->findOneBy([
-            'api_set_id' => $cardSerieId
+         $serieName = $this->em->getRepository(CardSerie::class)->findOneBy([
+            'serie_name' => $cardSerieName
         ]);
+        dump(gettype($serieName));
+        return $serieName;
     }
 
-    public function isCardSetExist(string $cardSetId) : CardSet
+    public function isCardSetExist(string $cardSetId) : ?CardSet
     {
         //$cardSet = $this->em->getRepository(CardSet::class)->findOneByApiSetId($cardSetId);
-        return $this->em->getRepository(CardSet::class)->findOneBy([
+        $setId = $this->em->getRepository(CardSet::class)->findOneBy([
             'api_set_id' => $cardSetId
         ]);
+        dump($setId);
+        return $setId;
     }
 
     public function createCardSetFromData($data)
     {
-//        $games = new Games();
-//        $games->setNames('Pokémon');
-//        $games->setCreatedAt(new \DateTimeImmutable());
-//        $this->em->persist($games);
-//        $this->em->flush();
-// Faire un fixture pour game = Pokémon
-
-        $game =  $this->em->getRepository(GamesRepository::class)->findOneBy([
-            'name' => 'Pokémon'
+        $game = $this->em->getRepository(Games::class)->findOneBy([
+            'names' => 'Pokemon'
         ]);
 
         // CARD SERIE HANDLING
         $cardSerieName = $data['set']['series'];
+        dump($cardSerieName);
+        dump($this->isCardSerieExist($cardSerieName));
         $card_serie = $this->isCardSerieExist($cardSerieName);
         if (!$card_serie) {
             $card_serie = new CardSerie();
