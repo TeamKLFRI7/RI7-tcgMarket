@@ -13,6 +13,7 @@ class GameFixtures extends Fixture
         $game = new Game();
         $game->setName('Pokemon');
         $game->setCreatedAt(new \DateTimeImmutable());
+        $game->setUpdatedAt(new \DateTimeImmutable());
         $manager->persist($game);
 
         $manager->flush();

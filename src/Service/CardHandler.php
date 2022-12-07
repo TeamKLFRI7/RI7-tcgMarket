@@ -17,7 +17,7 @@ class CardHandler
     public function isCardSerieExist(string $cardSerieName) : ?CardSerie
     {
          $serieName = $this->em->getRepository(CardSerie::class)->findOneBy([
-            'serie_name' => $cardSerieName
+            'serieName' => $cardSerieName
         ]);
         return $serieName;
     }
@@ -26,7 +26,7 @@ class CardHandler
     {
         //$cardSet = $this->em->getRepository(CardSet::class)->findOneByApiSetId($cardSetId);
         $setId = $this->em->getRepository(CardSet::class)->findOneBy([
-            'api_set_id' => $cardSetId
+            'apiSetId' => $cardSetId
         ]);
         return $setId;
     }
@@ -34,7 +34,7 @@ class CardHandler
     public function createCardSetFromData($data)
     {
         $game = $this->em->getRepository(Game::class)->findOneBy([
-            'names' => 'Pokemon'
+            'name' => 'Pokemon'
         ]);
 
         // CARD SERIE HANDLING
@@ -47,6 +47,7 @@ class CardHandler
             }
 
             $card_serie->setSerieName($data['set']['series']);
+            $card_serie->setImg("myIMG");
             $this->em->persist($card_serie);
         }
 

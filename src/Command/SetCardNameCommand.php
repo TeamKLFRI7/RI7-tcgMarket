@@ -39,7 +39,7 @@ class SetCardNameCommand extends Command
         $pages = $this->client->request('GET', 'https://api.pokemontcg.io/v2/cards', [
             'headers' => [
                 'Accept' => 'application/json',
-                'x-api-key' => '1db10c62-e29f-4189-93aa-ef100c275005',
+                'x-api-key' => '4ec1c77f-f189-4bbe-9544-cae6f803fcc7',
             ],
         ]);
 
@@ -59,7 +59,7 @@ class SetCardNameCommand extends Command
             $response = $this->client->request('GET', 'https://api.pokemontcg.io/v2/cards?page='.$nb, [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'x-api-key' => '1db10c62-e29f-4189-93aa-ef100c275005'
+                    'x-api-key' => '4ec1c77f-f189-4bbe-9544-cae6f803fcc7'
                     ,
                 ],
             ]);
