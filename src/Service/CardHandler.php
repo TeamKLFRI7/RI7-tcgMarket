@@ -14,6 +14,7 @@ class CardHandler
     {
     }
 
+    // Vérifie si la card série existe dans la DB en se basant sur le serieName
     public function isCardSerieExist(string $cardSerieName) : ?CardSerie
     {
          $serieName = $this->em->getRepository(CardSerie::class)->findOneBy([
@@ -22,10 +23,10 @@ class CardHandler
         return $serieName;
     }
 
+    // Véfifie si le card set existe dans la DB en se basant sur l'id du sert donnée par l'API
     public function isCardSetExist(string $cardSetId) : ?CardSet
     {
-        //$cardSet = $this->em->getRepository(CardSet::class)->findOneByApiSetId($cardSetId);
-        $setId = $this->em->getRepository(CardSet::class)->findOneBy([
+       $setId = $this->em->getRepository(CardSet::class)->findOneBy([
             'apiSetId' => $cardSetId
         ]);
         return $setId;
@@ -33,14 +34,17 @@ class CardHandler
 
     public function createCardSetFromData($data)
     {
+        // On récupère le game créer avec dataFixture et on l'attribut directement à chaque série
         $game = $this->em->getRepository(Game::class)->findOneBy([
             'name' => 'Pokemon'
         ]);
 
         // CARD SERIE HANDLING
         $cardSerieName = $data['set']['series'];
+        // Vérifie si la série existe
         $card_serie = $this->isCardSerieExist($cardSerieName);
         if (!$card_serie) {
+            // Si elle n'existe pas alors on instancie une nouvelle série
             $card_serie = new CardSerie();
             if ($game) {
                 $card_serie->setFkIdGame($game);
@@ -53,8 +57,10 @@ class CardHandler
 
         // CARD SET HANDLING
         $cardSetId = $data['set']['id'];
+        // Vérifie si le set existe
         $card_set = $this->isCardSetExist($cardSetId);
         if (!$card_set) {
+            // Si il n'existe pas on instancie un nouveau Set
             $card_set = new CardSet();
             $card_set->setCardSerie($card_serie);
             $card_set->setApiSetId($data['set']['id']);
@@ -76,6 +82,7 @@ class CardHandler
         $this->em->persist($card);
 
         $this->em->flush();
+        $this->em->clear();
     }
 
 }

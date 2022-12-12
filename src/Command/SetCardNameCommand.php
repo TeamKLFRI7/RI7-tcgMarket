@@ -30,6 +30,7 @@ class SetCardNameCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        //  Pour lancer l'ETL sans pblm de mémoire :  php -d memory_limit=512M bin/console card:main
         $output->writeln([
             'Start ETL',
             '============',
@@ -65,18 +66,29 @@ class SetCardNameCommand extends Command
             ]);
     
             $pokemons = $response->toArray();
-            $progressBar = new ProgressBar($output, sizeof($pokemons['data']));
-            $progressBar->setFormat('debug');
-            $progressBar->start();
-    
-            foreach ($pokemons['data'] as $pokemon) {
-                $this->ph->createCardSetFromData($pokemon);
+
+            if (sizeof($pokemons['data']) > 1) {
+
+                $progressBar = new ProgressBar($output, sizeof($pokemons['data']));
+                $progressBar->setFormat('debug');
+                $progressBar->start();
+
+                foreach ($pokemons['data'] as $pokemon) {
+                    $this->ph->createCardSetFromData($pokemon);
+                }
+
+                sleep(1);
+                $nb += 1;
+
+                $this->em->flush();
+                $this->em->clear();
+                unset($pokemons);
+
+                $progressBar->finish();
+                
+            } else {
+                break;
             }
-
-            sleep(1);
-
-            $nb += 1;
-            $progressBar->finish();
         };
 
         $output->writeln([
