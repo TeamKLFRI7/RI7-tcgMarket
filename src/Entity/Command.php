@@ -19,7 +19,7 @@ class Command
 
     #[ORM\ManyToOne(inversedBy: 'commands')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $fk_id_user = null;
+    private ?User $fkIdUser = null;
 
     #[ORM\Column(nullable: true)]
     private ?float $shipping = null;
@@ -28,15 +28,15 @@ class Command
     private ?float $total = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 45)]
-    private ?string $status_command = null;
+    private ?string $statusCommand = null;
 
-    #[ORM\OneToMany(mappedBy: 'fk_id_command', targetEntity: OrderItem::class)]
+    #[ORM\OneToMany(mappedBy: 'fkIdCommand', targetEntity: OrderItem::class)]
     private Collection $orderItems;
 
     public function __construct()
@@ -51,12 +51,12 @@ class Command
 
     public function getFkIdUser(): ?User
     {
-        return $this->fk_id_user;
+        return $this->fkIdUser;
     }
 
-    public function setFkIdUser(?User $fk_id_user): self
+    public function setFkIdUser(?User $fkIdUser): self
     {
-        $this->fk_id_user = $fk_id_user;
+        $this->fkIdUser = $fkIdUser;
 
         return $this;
     }
@@ -87,36 +87,36 @@ class Command
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
     public function getStatusCommand(): ?string
     {
-        return $this->status_command;
+        return $this->statusCommand;
     }
 
-    public function setStatusCommand(string $status_command): self
+    public function setStatusCommand(string $statusCommand): self
     {
-        $this->status_command = $status_command;
+        $this->statusCommand = $statusCommand;
 
         return $this;
     }

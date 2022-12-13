@@ -9,7 +9,6 @@
 /vendor/
 .env
 docker-compose.override.yml
-###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
 /phpunit.xml

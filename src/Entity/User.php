@@ -3,52 +3,102 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => 'user:item:get']
+        ),
+        new Post(
+            denormalizationContext: ['groups' => 'user:item:post'],
+        ),
+        new Put(
+            denormalizationContext: ['groups' => 'user:item:put']
+        ),
+        new Delete(
+            normalizationContext: ['groups' => 'user:item:delete']
+        )
+    ]
+)]
 class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([
+        'cardUser:item:get', 
+        'cardInSell:item:get', 
+        'user:item:get', 
+        'user:item:delete'
+    ])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 16)]
+    #[ORM\Column(length: 50)]
+    #[Groups([
+        'cardUser:item:get', 
+        'cardInSell:item:get', 
+        'user:item:post', 
+        'user:item:get', 
+        'user:item:put'
+    ])]
     #[Assert\Length(min: 3, max: 16)]
-    private ?string $username = null;
+    private ?string $userName = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
+    #[ORM\Column(length: 100, nullable: true)]
     #[Assert\Email]
+    #[Groups([
+        'user:item:post', 
+        'user:item:get', 
+        'user:item:put'
+    ])]
     private ?string $email = null;
-
-    #[ORM\Column]
-    private ?bool $is_admin = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created_at = null;
-
-    #[ORM\OneToOne(mappedBy: 'fk_user_id', cascade: ['persist', 'remove'])]
-    private ?UserInfo $userInfo = null;
-
-    #[ORM\OneToMany(mappedBy: 'fk_id_user', targetEntity: Command::class)]
-    private Collection $commands;
-
-    #[ORM\OneToMany(mappedBy: 'fk_id_user', targetEntity: CardUser::class)]
-    private Collection $cardUsers;
 
     #[ORM\Column(length: 15, nullable: true)]
     #[Assert\Regex('^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^')]
+    #[Groups([
+        'user:item:post', 
+        'user:item:get', 
+        'user:item:put'
+    ])]
     private ?string $phoneNumber = null;
+
+    #[ORM\Column]
+    #[Groups([
+        'user:item:post', 
+        'user:item:get'
+    ])]
+    private ?bool $isAdmin = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\Length(min: 8, max: 50)]
+    #[Groups([
+        'user:item:post', 
+        'user:item:put'
+    ])]
     private ?string $password = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\OneToOne(mappedBy: 'fkIdUser', cascade: ['persist', 'remove'])]
+    private ?UserInfo $userInfo = null;
+
+    #[ORM\OneToMany(mappedBy: 'fkIdUser', targetEntity: Command::class)]
+    private Collection $commands;
+
+    #[ORM\OneToMany(mappedBy: 'fkIdUser', targetEntity: CardUser::class)]
+    private Collection $cardUsers;
 
     public function __construct()
     {
@@ -61,14 +111,14 @@ class User
         return $this->id;
     }
 
-    public function getUsername(): ?string
+    public function getUserName(): ?string
     {
-        return $this->username;
+        return $this->userName;
     }
 
-    public function setUsername(string $username): self
+    public function setUserName(string $userName): self
     {
-        $this->username = $username;
+        $this->userName = $userName;
 
         return $this;
     }
@@ -85,26 +135,50 @@ class User
         return $this;
     }
 
-    public function isIsAdmin(): ?bool
+    public function getPhoneNumber(): ?string
     {
-        return $this->is_admin;
+        return $this->phoneNumber;
     }
 
-    public function setIsAdmin(bool $is_admin): self
+    public function setPhoneNumber(?string $phoneNumber): self
     {
-        $this->is_admin = $is_admin;
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function isIsAdmin(): ?bool
     {
-        return $this->created_at;
+        return $this->isAdmin;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    public function setIsAdmin(bool $isAdmin): self
     {
-        $this->created_at = $created_at;
+        $this->isAdmin = $isAdmin;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -117,8 +191,8 @@ class User
     public function setUserInfo(UserInfo $userInfo): self
     {
         // set the owning side of the relation if necessary
-        if ($userInfo->getFkUserId() !== $this) {
-            $userInfo->setFkUserId($this);
+        if ($userInfo->getFkIdUser() !== $this) {
+            $userInfo->setFkIdUser($this);
         }
 
         $this->userInfo = $userInfo;
@@ -182,30 +256,6 @@ class User
                 $cardUser->setFkIdUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPhoneNumber(): ?string
-    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(?string $phoneNumber): self
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
 
         return $this;
     }

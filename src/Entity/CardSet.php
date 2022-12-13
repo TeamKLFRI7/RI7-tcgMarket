@@ -3,46 +3,81 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CardSetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CardSetRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => 'cardSet:item:get'],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'cardSet:collection:get'],
+        )
+    ]
+)]
 class CardSet
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get', 
+        'cardSet:item:get', 
+        'cardSet:collection:get'
+    ])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CardUser::class)]
-    private Collection $fk_id_card;
+    private Collection $fkIdCardUser;
 
-    #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CataCard::class)]
-    private Collection $fk_id_cata_card;
+    #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: Card::class)]
+    #[Groups(['cardSet:item:get'])]
+    private Collection $fkIdCar;
 
-    #[ORM\Column(length: 45)]
-    private ?string $api_set_id = null;
+    #[ORM\Column(length: 100)]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get',
+        'cardSet:collection:get'
+    ])]
+    private ?string $apiSetId = null;
 
-    #[ORM\Column(length: 45)]
-    private ?string $set_name = null;
+    #[ORM\Column(length: 100)]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get', 
+        'cardSet:item:get',
+        'cardSet:collection:get'
+    ])]
+    private ?string $setName = null;
 
-    #[ORM\Column(length: 45)]
-    private ?string $set_link = null;
+    #[ORM\Column(length: 255)]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get',
+        'cardSet:collection:get'
+    ])]
+    private ?string $img = null;
 
-    #[ORM\Column(length: 45)]
-    private ?string $set_img = null;
-
-    #[ORM\ManyToOne(inversedBy: 'fk_id_card_set')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'fkIdCardSet')]
     private ?CardSerie $cardSerie = null;
 
     public function __construct()
     {
-        $this->fk_id_card = new ArrayCollection();
-        $this->fk_id_cata_card = new ArrayCollection();
+        $this->fkIdCardUser = new ArrayCollection();
+        $this->fkIdCar = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -53,27 +88,27 @@ class CardSet
     /**
      * @return Collection<int, CardUser>
      */
-    public function getFkIdCard(): Collection
+    public function getFkIdCardUser(): Collection
     {
-        return $this->fk_id_card;
+        return $this->fkIdCardUser;
     }
 
-    public function addFkIdCard(CardUser $fkIdCard): self
+    public function addFkIdCardUser(CardUser $fkIdCardUser): self
     {
-        if (!$this->fk_id_card->contains($fkIdCard)) {
-            $this->fk_id_card->add($fkIdCard);
-            $fkIdCard->setCardSet($this);
+        if (!$this->fkIdCardUser->contains($fkIdCardUser)) {
+            $this->fkIdCardUser->add($fkIdCardUser);
+            $fkIdCardUser->setCardSet($this);
         }
 
         return $this;
     }
 
-    public function removeFkIdCard(CardUser $fkIdCard): self
+    public function removeFkIdCardUser(CardUser $fkIdCardUser): self
     {
-        if ($this->fk_id_card->removeElement($fkIdCard)) {
+        if ($this->fkIdCardUser->removeElement($fkIdCardUser)) {
             // set the owning side to null (unless already changed)
-            if ($fkIdCard->getCardSet() === $this) {
-                $fkIdCard->setCardSet(null);
+            if ($fkIdCardUser->getCardSet() === $this) {
+                $fkIdCardUser->setCardSet(null);
             }
         }
 
@@ -81,29 +116,29 @@ class CardSet
     }
 
     /**
-     * @return Collection<int, CataCard>
+     * @return Collection<int, Card>
      */
-    public function getFkIdCataCard(): Collection
+    public function getFkIdCar(): Collection
     {
-        return $this->fk_id_cata_card;
+        return $this->fkIdCar;
     }
 
-    public function addFkIdCataCard(CataCard $fkIdCataCard): self
+    public function addFkIdCar(Card $fkIdCar): self
     {
-        if (!$this->fk_id_cata_card->contains($fkIdCataCard)) {
-            $this->fk_id_cata_card->add($fkIdCataCard);
-            $fkIdCataCard->setCardSet($this);
+        if (!$this->fkIdCar->contains($fkIdCar)) {
+            $this->fkIdCar->add($fkIdCar);
+            $fkIdCar->setCardSet($this);
         }
 
         return $this;
     }
 
-    public function removeFkIdCataCard(CataCard $fkIdCataCard): self
+    public function removeFkIdCar(Card $fkIdCar): self
     {
-        if ($this->fk_id_cata_card->removeElement($fkIdCataCard)) {
+        if ($this->fkIdCar->removeElement($fkIdCar)) {
             // set the owning side to null (unless already changed)
-            if ($fkIdCataCard->getCardSet() === $this) {
-                $fkIdCataCard->setCardSet(null);
+            if ($fkIdCar->getCardSet() === $this) {
+                $fkIdCar->setCardSet(null);
             }
         }
 
@@ -112,48 +147,36 @@ class CardSet
 
     public function getApiSetId(): ?string
     {
-        return $this->api_set_id;
+        return $this->apiSetId;
     }
 
-    public function setApiSetId(string $api_set_id): self
+    public function setApiSetId(string $apiSetId): self
     {
-        $this->api_set_id = $api_set_id;
+        $this->apiSetId = $apiSetId;
 
         return $this;
     }
 
     public function getSetName(): ?string
     {
-        return $this->set_name;
+        return $this->setName;
     }
 
-    public function setSetName(string $set_name): self
+    public function setSetName(string $setName): self
     {
-        $this->set_name = $set_name;
+        $this->setName = $setName;
 
         return $this;
     }
 
-    public function getSetLink(): ?string
+    public function getImg(): ?string
     {
-        return $this->set_link;
+        return $this->img;
     }
 
-    public function setSetLink(string $set_link): self
+    public function setImg(string $img): self
     {
-        $this->set_link = $set_link;
-
-        return $this;
-    }
-
-    public function getSetImg(): ?string
-    {
-        return $this->set_img;
-    }
-
-    public function setSetImg(string $set_img): self
-    {
-        $this->set_img = $set_img;
+        $this->img = $img;
 
         return $this;
     }

@@ -3,53 +3,64 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use App\Repository\CardUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CardUserRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => 'cardUser:item:get'],
+        )
+    ]
+)]
 class CardUser
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['cardSet:item:get', 'cardUser:item:get', 'cardInSell:item:get'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'cardUsers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $fk_id_user = null;
+    #[Groups(['cardUser:item:get', 'cardInSell:item:get'])]
+    private ?User $fkIdUser = null;
 
-    #[ORM\Column(length: 45)]
+    #[ORM\Column(length: 100)]
+    #[Groups(['cardInSell:item:get'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups(['cardInSell:item:get'])]
     private ?string $quality = null;
 
     #[ORM\Column]
-    private ?int $quantity = null;
-
-    #[ORM\Column]
+    #[Groups(['cardInSell:item:get'])]
     private ?float $price = null;
 
-    #[ORM\Column(length: 45)]
-    private ?string $img = null;
-
-    #[ORM\OneToMany(mappedBy: 'fk_id_card', targetEntity: OrderItem::class)]
+    #[ORM\OneToMany(mappedBy: 'fkIdCardUser', targetEntity: OrderItem::class)]
     private Collection $orderItems;
 
-    #[ORM\OneToMany(mappedBy: 'fk_id_card', targetEntity: CataCard::class)]
-    private Collection $cataCards;
+    #[ORM\ManyToOne(inversedBy: 'fkIdCardUser')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Card $card = null;
 
-    #[ORM\ManyToOne(inversedBy: 'fk_id_card')]
+    #[ORM\ManyToOne(inversedBy: 'fkIdCardUser')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CardSet $cardSet = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['cardInSell:item:get'])]
+    private ?string $img = null;
 
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
-        $this->cataCards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,12 +70,12 @@ class CardUser
 
     public function getFkIdUser(): ?User
     {
-        return $this->fk_id_user;
+        return $this->fkIdUser;
     }
 
-    public function setFkIdUser(?User $fk_id_user): self
+    public function setFkIdUser(?User $fkIdUser): self
     {
-        $this->fk_id_user = $fk_id_user;
+        $this->fkIdUser = $fkIdUser;
 
         return $this;
     }
@@ -93,18 +104,6 @@ class CardUser
         return $this;
     }
 
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): self
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
     public function getPrice(): ?float
     {
         return $this->price;
@@ -113,18 +112,6 @@ class CardUser
     public function setPrice(float $price): self
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getImg(): ?string
-    {
-        return $this->img;
-    }
-
-    public function setImg(string $img): self
-    {
-        $this->img = $img;
 
         return $this;
     }
@@ -141,7 +128,7 @@ class CardUser
     {
         if (!$this->orderItems->contains($orderItem)) {
             $this->orderItems->add($orderItem);
-            $orderItem->setFkIdCard($this);
+            $orderItem->setFkIdCardUser($this);
         }
 
         return $this;
@@ -151,40 +138,22 @@ class CardUser
     {
         if ($this->orderItems->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
-            if ($orderItem->getFkIdCard() === $this) {
-                $orderItem->setFkIdCard(null);
+            if ($orderItem->getFkIdCardUser() === $this) {
+                $orderItem->setFkIdCardUser(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, CataCard>
-     */
-    public function getCataCards(): Collection
+    public function getCard(): ?Card
     {
-        return $this->cataCards;
+        return $this->card;
     }
 
-    public function addCataCard(CataCard $cataCard): self
+    public function setCard(?Card $card): self
     {
-        if (!$this->cataCards->contains($cataCard)) {
-            $this->cataCards->add($cataCard);
-            $cataCard->setFkIdCard($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCataCard(CataCard $cataCard): self
-    {
-        if ($this->cataCards->removeElement($cataCard)) {
-            // set the owning side to null (unless already changed)
-            if ($cataCard->getFkIdCard() === $this) {
-                $cataCard->setFkIdCard(null);
-            }
-        }
+        $this->card = $card;
 
         return $this;
     }
@@ -197,6 +166,18 @@ class CardUser
     public function setCardSet(?CardSet $cardSet): self
     {
         $this->cardSet = $cardSet;
+
+        return $this;
+    }
+
+    public function getImg(): ?string
+    {
+        return $this->img;
+    }
+
+    public function setImg(string $img): self
+    {
+        $this->img = $img;
 
         return $this;
     }

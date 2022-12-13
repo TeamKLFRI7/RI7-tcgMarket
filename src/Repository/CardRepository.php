@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\CataCard;
+use App\Entity\Card;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CataCard>
+ * @extends ServiceEntityRepository<Card>
  *
- * @method CataCard|null find($id, $lockMode = null, $lockVersion = null)
- * @method CataCard|null findOneBy(array $criteria, array $orderBy = null)
- * @method CataCard[]    findAll()
- * @method CataCard[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Card|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Card|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Card[]    findAll()
+ * @method Card[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CataCardRepository extends ServiceEntityRepository
+class CardRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CataCard::class);
+        parent::__construct($registry, Card::class);
     }
 
-    public function save(CataCard $entity, bool $flush = false): void
+    public function save(Card $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CataCardRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(CataCard $entity, bool $flush = false): void
+    public function remove(Card $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CataCardRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return CataCard[] Returns an array of CataCard objects
+//     * @return Card[] Returns an array of Card objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CataCardRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?CataCard
+//    public function findOneBySomeField($value): ?Card
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

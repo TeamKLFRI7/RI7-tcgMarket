@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserInfoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,9 +19,9 @@ class UserInfo
 
     #[ORM\OneToOne(inversedBy: 'userInfo', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $fk_user_id = null;
+    private ?User $fkIdUser = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     #[Assert\Length(max: 45)]
     private ?string $city = null;
 
@@ -33,27 +34,27 @@ class UserInfo
 
     #[ORM\Column(length: 5, nullable: true)]
     #[Assert\Regex('/^(?:0[1-9]|[1-8]\d|9[0-8])\d{3}$/')]
-    private ?string $zip_code = null;
+    private ?string $postalCode = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $delivery_address = null;
+    private ?string $deliveryAddress = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFkUserId(): ?User
+    public function getFkIdUser(): ?User
     {
-        return $this->fk_user_id;
+        return $this->fkIdUser;
     }
 
-    public function setFkUserId(User $fk_user_id): self
+    public function setFkIdUser(User $fkIdUser): self
     {
-        $this->fk_user_id = $fk_user_id;
+        $this->fkIdUser = $fkIdUser;
 
         return $this;
     }
@@ -63,7 +64,7 @@ class UserInfo
         return $this->city;
     }
 
-    public function setCity(string $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
 
@@ -94,14 +95,14 @@ class UserInfo
         return $this;
     }
 
-    public function getZipCode(): ?string
+    public function getPostalCode(): ?string
     {
-        return $this->zip_code;
+        return $this->postalCode;
     }
 
-    public function setZipCode(?string $zip_code): self
+    public function setPostalCode(?string $postalCode): self
     {
-        $this->zip_code = $zip_code;
+        $this->postalCode = $postalCode;
 
         return $this;
     }
@@ -120,12 +121,12 @@ class UserInfo
 
     public function getDeliveryAddress(): ?string
     {
-        return $this->delivery_address;
+        return $this->deliveryAddress;
     }
 
-    public function setDeliveryAddress(?string $delivery_address): self
+    public function setDeliveryAddress(?string $deliveryAddress): self
     {
-        $this->delivery_address = $delivery_address;
+        $this->deliveryAddress = $deliveryAddress;
 
         return $this;
     }
