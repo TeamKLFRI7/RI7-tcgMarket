@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\CardUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +19,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => 'cardUser:item:get'],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'cardUser:collection:get']
+        ),
+        new Post(
+            denormalizationContext:['groups' => 'cardUser:item:post']
+        ),
+        new Put(
+            denormalizationContext:['groups' => 'cardUser:item:put']
+        ),
+        new Delete(
+            normalizationContext:['groups' => 'cardUser:item:delete']
         )
     ]
 )]
@@ -23,24 +39,51 @@ class CardUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['cardSet:item:get', 'cardUser:item:get', 'cardInSell:item:get'])]
+    #[Groups([
+        'cardSet:item:get', 
+        'cardUser:item:get', 
+        'cardInSell:item:get',
+        'cardUser:collection:get',
+        'cardUser:item:delete'
+    ])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'cardUsers')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['cardUser:item:get', 'cardInSell:item:get'])]
+    #[Groups([
+        'cardUser:item:get', 
+        'cardInSell:item:get',
+        'cardUser:collection:get',
+        'cardUser:item:post',
+        'cardUser:item:put'
+    ])]
     private ?User $fkIdUser = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['cardInSell:item:get'])]
+    #[Groups([
+        'cardInSell:item:get',
+        'cardUser:collection:get',
+        'cardUser:item:post',
+        'cardUser:item:put'
+    ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 45)]
-    #[Groups(['cardInSell:item:get'])]
+    #[Groups([
+        'cardInSell:item:get',
+        'cardUser:collection:get',
+        'cardUser:item:post',
+        'cardUser:item:put'
+    ])]
     private ?string $quality = null;
 
     #[ORM\Column]
-    #[Groups(['cardInSell:item:get'])]
+    #[Groups([
+        'cardInSell:item:get',
+        'cardUser:collection:get',
+        'cardUser:item:post',
+        'cardUser:item:put'
+    ])]
     private ?float $price = null;
 
     #[ORM\OneToMany(mappedBy: 'fkIdCardUser', targetEntity: OrderItem::class)]
@@ -48,14 +91,27 @@ class CardUser
 
     #[ORM\ManyToOne(inversedBy: 'fkIdCardUser')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups([
+        'cardUser:item:post',
+        'cardUser:item:put'
+    ])]
     private ?Card $card = null;
 
     #[ORM\ManyToOne(inversedBy: 'fkIdCardUser')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups([
+        'cardUser:item:post',
+        'cardUser:item:put'
+    ])] 
     private ?CardSet $cardSet = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['cardInSell:item:get'])]
+    #[Groups([
+        'cardInSell:item:get',
+        'cardUser:collection:get',
+        'cardUser:item:post',
+        'cardUser:item:put'
+    ])]
     private ?string $img = null;
 
     public function __construct()
