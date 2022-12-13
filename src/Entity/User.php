@@ -40,7 +40,8 @@ class User
         'cardUser:item:get', 
         'cardInSell:item:get', 
         'user:item:get', 
-        'user:item:delete'
+        'user:item:delete',
+        
     ])]
     private ?int $id = null;
 
