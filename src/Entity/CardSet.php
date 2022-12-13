@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CardSetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => 'cardSet:item:get'],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'cardSet:collection:get'],
         )
     ]
 )]
@@ -23,7 +27,13 @@ class CardSet
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['game:series:get', 'cardSet:item:get'])]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get', 
+        'cardSet:item:get', 
+        'cardSet:collection:get'
+    ])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CardUser::class)]
@@ -34,15 +44,31 @@ class CardSet
     private Collection $fkIdCar;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get',
+        'cardSet:collection:get'
+    ])]
     private ?string $apiSetId = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['game:series:get', 'cardSet:item:get'])]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get', 
+        'cardSet:item:get',
+        'cardSet:collection:get'
+    ])]
     private ?string $setName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get',
+        'cardSet:collection:get'
+    ])]
     private ?string $img = null;
 
     #[ORM\ManyToOne(inversedBy: 'fkIdCardSet')]

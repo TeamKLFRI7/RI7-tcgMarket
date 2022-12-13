@@ -75,14 +75,13 @@ class SetCardNameCommand extends Command
 
                 foreach ($pokemons['data'] as $pokemon) {
                     $this->ph->createCardSetFromData($pokemon);
+                    $this->em->flush();
+                    $this->em->clear();
+                    unset($pokemon);
                 }
 
                 sleep(1);
                 $nb += 1;
-
-                $this->em->flush();
-                $this->em->clear();
-                unset($pokemons);
 
                 $progressBar->finish();
                 

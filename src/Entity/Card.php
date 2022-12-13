@@ -23,22 +23,37 @@ class Card
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['cardSet:item:get', 'cardInSell:item:get'])]
+    #[Groups([
+        'cardSet:item:get', 
+        'cardSet:collection:get', 
+        'cardInSell:item:get'
+    ])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'card', targetEntity: CardUser::class)]
-    #[Groups(['cardSet:item:get', 'cardInSell:item:get'])]
+    #[Groups([
+        'cardSet:item:get', 
+        'cardSet:collection:get', 
+        'cardInSell:item:get'
+    ])]
     private Collection $fkIdCardUser;
 
     #[ORM\Column(length: 100)]
     private ?string $apiCardId = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['cardSet:item:get', 'cardInSell:item:get'])]
+    #[Groups([
+        'cardSet:item:get', 
+        'cardSet:collection:get', 
+        'cardInSell:item:get'
+    ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['cardSet:item:get'])]
+    #[Groups([
+        'cardSet:item:get', 
+        'cardSet:collection:get'
+    ])]
     private ?string $img = null;
 
     #[ORM\Column(length: 255)]

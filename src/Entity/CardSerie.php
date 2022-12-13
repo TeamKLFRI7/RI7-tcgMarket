@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CardSerieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,28 +12,57 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CardSerieRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => 'cardSerie:item:get'],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'cardSerie:collection:get'],
+        )
+    ]
+)]
 class CardSerie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([
+        'cardSerie:item:get', 
+        'cardSerie:collection:get'
+    ])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSerie', targetEntity: CardSet::class)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get'
+    ])]
     private Collection $fkIdCardSet;
 
     #[ORM\ManyToOne(inversedBy: 'cardSeries')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups([
+        'cardSerie:item:get', 
+        'cardSerie:collection:get'
+    ])]
     private ?Game $fkIdGame = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get'
+    ])]
     private ?string $serieName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get', 
+        'cardSerie:item:get', 
+        'cardSerie:collection:get'
+    ])]
     private ?string $img = null;
 
     public function __construct()
