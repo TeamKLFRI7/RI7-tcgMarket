@@ -42,7 +42,7 @@ class CardSerie
     private Collection $fkIdCardSet;
 
     #[ORM\ManyToOne(inversedBy: 'cardSeries')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
     #[Groups([
         'cardSerie:item:get', 
         'cardSerie:collection:get'
