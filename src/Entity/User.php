@@ -3,6 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,32 +15,92 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => 'user:item:get']
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'user:collection:get']
+        ),
+        new Post(
+            denormalizationContext: ['groups' => 'user:item:post'],
+        ),
+        new Put(
+            denormalizationContext: ['groups' => 'user:item:put']
+        ),
+        new Delete(
+            normalizationContext: ['groups' => 'user:item:delete']
+        )
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([
+        'cardUser:item:get', 
+        'cardInSell:item:get', 
+        'user:item:get',
+        'user:collection:get',
+        'user:item:delete'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Email]
+    #[Groups([
+        'user:item:post', 
+        'user:item:get',
+        'user:collection:get',
+        'user:item:put'
+    ])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups([
+        'user:item:post', 
+        'user:item:get',
+        'user:collection:get'
+    ])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\Length(min: 8, max: 50)]
+    #[Groups([
+        'user:item:post', 
+        'user:item:put'
+    ])]
     private ?string $password = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(min: 3, max: 16)]
+    #[Groups([
+        'cardUser:item:get', 
+        'cardInSell:item:get', 
+        'user:item:post', 
+        'user:item:get',
+        'user:collection:get',
+        'user:item:put'
+    ])]
     private ?string $userName = null;
 
     #[ORM\Column(length: 15)]
+    #[Assert\Regex('^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^')]
+    #[Groups([
+        'user:item:post', 
+        'user:item:get',
+        'user:collection:get',
+        'user:item:put'
+    ])]
     private ?string $phoneNumber = null;
 
     #[ORM\OneToOne(mappedBy: 'fkIdUser', cascade: ['persist', 'remove'])]
