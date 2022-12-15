@@ -64,7 +64,7 @@ class CardHandler
             $card_set = new CardSet();
             $card_set->setCardSerie($card_serie);
             $card_set->setApiSetId($data['set']['id']);
-            $card_set->setImg($data['set']['images']['logo']);
+            $card_set->setImg($data['set']['images']['symbol']);
             $card_set->setSetName($data['set']['name']);
             $this->em->persist($card_set);
         }
