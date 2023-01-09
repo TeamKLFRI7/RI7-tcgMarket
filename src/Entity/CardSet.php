@@ -79,8 +79,9 @@ class CardSet
         'cardSerie:item:get',
         'cardSerie:collection:get',
         'cardSet:collection:get',
-        'cardSet:item:get'
-    ])]
+        'cardSet:item:get',
+        'game:series:get',
+])]
     private ?string $logo = null;
 
     #[ORM\ManyToOne(inversedBy: 'fkIdCardSet')]
