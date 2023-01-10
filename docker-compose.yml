@@ -20,7 +20,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: phpmyadmin_tcg_marke
+    container_name: phpmyadmin_tcg_market
     restart: always
     depends_on:
       - database
