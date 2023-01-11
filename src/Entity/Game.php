@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => 'game:series:get'],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'game:collection:get'],
         )
     ]
 )]
@@ -23,11 +27,17 @@ class Game
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get',
+        'game:collection:get'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 45)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get',
+        'game:collection:get'
+    ])]
     private ?string $name = null;
 
     #[ORM\Column]

@@ -8,9 +8,9 @@ NPM = $(EXEC) npm
 SYMFONY_CONSOLE = $(PHP) bin/console
 
 # Colors
-GREEN ='\033[0;32m'
-RED ='\033[0;31m'
-COLOUR_END='\033[0m'
+GREEN = /bin/echo "\033[0;32m\#\# $1\033[0m"
+RED = /bin/echo "\033[0;31m\#\# $1\033[0m"
+COLOUR_END=\033[0m
 
 ## —— 🔥 App ——
 install: ## Init the project
@@ -20,7 +20,7 @@ install: ## Init the project
 	$(MAKE) database-init
 	$(MAKE) database-etl-create
 
-	echo "The application is available at: http://127.0.0.1:8000/."
+	@$(call GREEN,"The application is available at: http://127.0.0.1:8000/.")
 
 cache-clear: ## Clear cache
 	$(SYMFONY_CONSOLE) cache:clear
@@ -55,14 +55,15 @@ e2e-test: ## Run E2E tests
 ## —— 🐳 Docker ——
 up: ## Start app
 	$(MAKE) docker-start
+		@$(call GREEN,"The application is available at: http://127.0.0.1:8000/.")
 docker-start:
 	$(DOCKER_COMPOSE) up -d
 
 down: ## down app
 	$(MAKE) docker-stop
+	@$(call RED,"The containers are now stopped.")
 docker-stop:
 	$(DOCKER_COMPOSE) down
-	@$(call RED,"The containers are now stopped.")
 
 ## —— 🎻 Composer ——
 composer-install: ## Install dependencies
@@ -115,10 +116,7 @@ database-fixtures-load: ## Load fixtures
 fixtures: ## Alias : database-fixtures-load
 	$(MAKE) database-fixtures-load
 
-database-etl-create: ## download data api
-	$(PHP) -d memory_limit=512M bin/console card:main
-
-database-etl-update: ## update data api
+etl: ## download data api
 	$(PHP) -d memory_limit=512M bin/console card:main
 
 ## —— 🛠️  Others ——
