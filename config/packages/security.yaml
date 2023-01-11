@@ -25,9 +25,13 @@ security:
         success_handler: lexik_jwt_authentication.handler.authentication_success
         failure_handler: lexik_jwt_authentication.handler.authentication_failure
     api:
+      entry_point: jwt
       pattern: ^/api
       stateless: true
       jwt: ~
+      refresh_jwt:
+        check_path: /api/token/refresh
+
     # main:
       # lazy: true
       # provider: app_user_provider
@@ -52,18 +56,9 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    # - { path: ^/api/handle-stripe-webhook, roles: PUBLIC_ACCESS }
-    # - { path: ^/api/docs, roles: PUBLIC_ACCESS }
-    # - { path: ^/login, roles: PUBLIC_ACCESS }
-    - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
-    # - { path: ^/api/register, roles: PUBLIC_ACCESS }
-    # - { path: ^/api/reset-password/*, roles: PUBLIC_ACCESS }
-    # - { path: ^/reset-password/*, roles: PUBLIC_ACCESS }
-    # - { path: ^/api/public/*, roles: PUBLIC_ACCESS }
-    # - { path: ^/public/*, roles: PUBLIC_ACCESS }
-    # - { path: ^/admin/*, roles: ROLE_ADMIN }
+    - { path: ^/(authentication_token|api_refresh_token), roles: PUBLIC_ACCESS }
     - { path: ^/api/*, roles: PUBLIC_ACCESS }
-    - { path: ^/, roles: PUBLIC_ACCESS }
+    - { path: ^/profil, roles: ROLE_USER }
   # - { path: ^/admin, roles: ROLE_ADMIN }
   # - { path: ^/profile, roles: ROLE_USER }
 
