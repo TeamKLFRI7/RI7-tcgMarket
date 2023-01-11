@@ -13,7 +13,7 @@ class UserInfoTest extends KernelTestCase
         return (new UserInfo())
             ->setAddress('1 rue du test')
             ->setCity('testCity')
-            ->setZipCode('13000')
+            ->setPostalCode('13000')
             ->setCountry('France')
             ->setDeliveryAddress('1 rue du test')
             ->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. 
@@ -58,13 +58,13 @@ class UserInfoTest extends KernelTestCase
         $this->assertCount(1, $errors);
     }
 
-    public function testUserInfoZipCodeIsNotValid(): void
+    public function testUserInfoPostalCodeIsNotValid(): void
     {
         self::bootKernel();
         $container = static::getContainer();
 
         $user = $this->getEntity()
-            ->setZipCode('99000');
+            ->setPostalCode('99000');
 
         $errors = $container->get('validator')->validate($user);
         $this->assertCount(1, $errors);

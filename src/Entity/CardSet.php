@@ -37,6 +37,7 @@ class CardSet
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CardUser::class)]
+    #[Groups(['cardUser:item:post'])]
     private Collection $fkIdCardUser;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: Card::class)]
@@ -67,9 +68,20 @@ class CardSet
         'game:series:get', 
         'cardSerie:item:get', 
         'cardSerie:collection:get',
-        'cardSet:collection:get'
+        'cardSet:collection:get',
+        'cardSet:item:get'
     ])]
     private ?string $img = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups([
+        'game:series:get',
+        'cardSerie:item:get',
+        'cardSerie:collection:get',
+        'cardSet:collection:get',
+        'cardSet:item:get'
+    ])]
+    private ?string $logo = null;
 
     #[ORM\ManyToOne(inversedBy: 'fkIdCardSet')]
     private ?CardSerie $cardSerie = null;
@@ -177,6 +189,18 @@ class CardSet
     public function setImg(string $img): self
     {
         $this->img = $img;
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
 
         return $this;
     }

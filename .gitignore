@@ -1,5 +1,6 @@
 
 ###> symfony/framework-bundle ###
+/.idea/
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -7,7 +8,9 @@
 /public/bundles/
 /var/
 /vendor/
+/data/
 .env
+*.DS_Store
 docker-compose.override.yml
 
 ###> phpunit/phpunit ###
@@ -19,3 +22,7 @@ docker-compose.override.yml
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

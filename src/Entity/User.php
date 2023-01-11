@@ -4,21 +4,32 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
+
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     operations: [
         new Get(
             normalizationContext: ['groups' => 'user:item:get']
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'user:collection:get']
         ),
         new Post(
             denormalizationContext: ['groups' => 'user:item:post'],
@@ -31,7 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         )
     ]
 )]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -39,57 +50,63 @@ class User
     #[Groups([
         'cardUser:item:get', 
         'cardInSell:item:get', 
-        'user:item:get', 
+        'user:item:get',
+        'user:collection:get',
         'user:item:delete'
     ])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    #[Groups([
-        'cardUser:item:get', 
-        'cardInSell:item:get', 
-        'user:item:post', 
-        'user:item:get', 
-        'user:item:put'
-    ])]
-    #[Assert\Length(min: 3, max: 16)]
-    private ?string $userName = null;
-
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email]
     #[Groups([
         'user:item:post', 
-        'user:item:get', 
+        'user:item:get',
+        'user:collection:get',
         'user:item:put'
     ])]
     private ?string $email = null;
 
-    #[ORM\Column(length: 15, nullable: true)]
-    #[Assert\Regex('^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^')]
-    #[Groups([
-        'user:item:post', 
-        'user:item:get', 
-        'user:item:put'
-    ])]
-    private ?string $phoneNumber = null;
-
     #[ORM\Column]
     #[Groups([
         'user:item:post', 
-        'user:item:get'
+        'user:item:get',
+        'user:collection:get'
     ])]
-    private ?bool $isAdmin = null;
+    private array $roles = [];
 
-    #[ORM\Column(length: 50)]
-    #[Assert\Length(min: 8, max: 50)]
+    private ?string $plainPassword = null;
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column(length: 255)]
     #[Groups([
         'user:item:post', 
         'user:item:put'
     ])]
     private ?string $password = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(length: 100)]
+    #[Assert\Length(min: 3, max: 16)]
+    #[Groups([
+        'cardUser:item:get', 
+        'cardInSell:item:get', 
+        'user:item:post', 
+        'user:item:get',
+        'user:collection:get',
+        'user:item:put'
+    ])]
+    private ?string $userName = null;
+
+    #[ORM\Column(length: 15)]
+    #[Assert\Regex('^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^')]
+    #[Groups([
+        'user:item:post', 
+        'user:item:get',
+        'user:collection:get',
+        'user:item:put'
+    ])]
+    private ?string $phoneNumber = null;
 
     #[ORM\OneToOne(mappedBy: 'fkIdUser', cascade: ['persist', 'remove'])]
     private ?UserInfo $userInfo = null;
@@ -100,6 +117,8 @@ class User
     #[ORM\OneToMany(mappedBy: 'fkIdUser', targetEntity: CardUser::class)]
     private Collection $cardUsers;
 
+    use TimestampableEntity;
+
     public function __construct()
     {
         $this->commands = new ArrayCollection();
@@ -109,6 +128,91 @@ class User
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+        /**
+     * Get the value of plainPassword
+     */ 
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set the value of plainPassword
+     *
+     * @return  self
+     */ 
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getUserName(): ?string
@@ -123,62 +227,14 @@ class User
         return $this;
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
     public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(?string $phoneNumber): self
+    public function setPhoneNumber(string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    public function isIsAdmin(): ?bool
-    {
-        return $this->isAdmin;
-    }
-
-    public function setIsAdmin(bool $isAdmin): self
-    {
-        $this->isAdmin = $isAdmin;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -200,7 +256,7 @@ class User
         return $this;
     }
 
-    /**
+    /** 
      * @return Collection<int, Command>
      */
     public function getCommands(): Collection
