@@ -8,8 +8,7 @@ security:
     app_user_provider:
       entity:
         class: App\Entity\User
-        property: email
-    # used to reload user from session & other features (e.g. switch_user)
+        property: userName
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -20,30 +19,26 @@ security:
       provider: app_user_provider
       json_login:
         check_path: /authentication_token
-        username_path: email
+        username_path: userName
         password_path: password
         success_handler: lexik_jwt_authentication.handler.authentication_success
         failure_handler: lexik_jwt_authentication.handler.authentication_failure
     api:
-      entry_point: jwt
       pattern: ^/api
       stateless: true
       jwt: ~
-      refresh_jwt:
-        check_path: /api/token/refresh
-
-    # main:
-      # lazy: true
-      # provider: app_user_provider
-      # form_login:
-      #   login_path: app_login
-      #   check_path: app_login
-      # logout:
-      #   path: app_logout
-      #   target: app_login
-      # remember_me:
-      #   secret: '%kernel.secret%'
-      #   lifetime: 604800
+    main:
+      lazy: true
+      provider: app_user_provider
+      form_login:
+        login_path: app_login
+        check_path: app_login
+      logout:
+        path: app_logout
+        target: app_login
+      remember_me:
+        secret: '%kernel.secret%'
+        lifetime: 604800
     secured_area:
       form_login:
         enable_csrf: true
@@ -56,16 +51,23 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    - { path: ^/(authentication_token|api_refresh_token), roles: PUBLIC_ACCESS }
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
+    - { path: ^/api/card_users, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/commands, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/order_items, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/user_infos, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/api/*, roles: PUBLIC_ACCESS }
-    - { path: ^/profil, roles: ROLE_USER }
-  # - { path: ^/admin, roles: ROLE_ADMIN }
-  # - { path: ^/profile, roles: ROLE_USER }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER
+    ROLE_CUSTOMER: ROLE_USER
 
 when@test:
   security:
     password_hashers:
-      App\Entity\User: 'auto'
       # By default, password hashers are resource intensive and take time. This is
       # important to generate secure password hashes. In tests however, secure hashes
       # are not important, waste resources and increase test times. The following

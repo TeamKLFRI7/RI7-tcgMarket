@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 
+use App\Controller\MeController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,7 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[UniqueEntity('email')]
+#[UniqueEntity('email', 'userName')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     operations: [
@@ -39,6 +40,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Delete(
             normalizationContext: ['groups' => 'user:item:delete']
+        ),
+        new Get(
+            uriTemplate: '/me',
+            controller: MeController::class,
+            normalizationContext: ['groups' => 'me'],
+            read: false,
+            name: 'me'
         )
     ]
 )]
@@ -52,7 +60,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'cardInSell:item:get', 
         'user:item:get',
         'user:collection:get',
-        'user:item:delete'
+        'user:item:delete',
+        'me'
     ])]
     private ?int $id = null;
 
@@ -62,7 +71,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'user:item:post', 
         'user:item:get',
         'user:collection:get',
-        'user:item:put'
+        'user:item:put',
+        'me'
     ])]
     private ?string $email = null;
 
@@ -70,7 +80,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups([
         'user:item:post', 
         'user:item:get',
-        'user:collection:get'
+        'user:collection:get',
+        'me'
     ])]
     private array $roles = [];
 
@@ -94,7 +105,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'user:item:post', 
         'user:item:get',
         'user:collection:get',
-        'user:item:put'
+        'user:item:put',
+        'me'
     ])]
     private ?string $userName = null;
 
@@ -104,7 +116,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         'user:item:post', 
         'user:item:get',
         'user:collection:get',
-        'user:item:put'
+        'user:item:put',
+        'me'
     ])]
     private ?string $phoneNumber = null;
 

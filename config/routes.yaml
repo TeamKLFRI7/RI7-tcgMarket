@@ -4,6 +4,4 @@ controllers:
 authentication_token:
     path: /authentication_token
     methods: ['POST']
-api_refresh_token:
-    path: /api/token/refresh
 
