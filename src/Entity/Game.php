@@ -50,9 +50,19 @@ class Game
     #[Groups(['game:series:get'])]
     private Collection $cardSeries;
 
+    #[ORM\OneToMany(mappedBy: 'fkIdGame', targetEntity: CardUser::class)]
+    private Collection $cardUsers;
+
+    #[ORM\Column]
+    #[Groups([
+        'game:collection:get'
+    ])]
+    private ?bool $isActive = null;
+
     public function __construct()
     {
         $this->cardSeries = new ArrayCollection();
+        $this->cardUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,6 +132,48 @@ class Game
                 $cardSeries->setFkIdGame(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CardUser>
+     */
+    public function getCardUsers(): Collection
+    {
+        return $this->cardUsers;
+    }
+
+    public function addCardUser(CardUser $cardUser): self
+    {
+        if (!$this->cardUsers->contains($cardUser)) {
+            $this->cardUsers->add($cardUser);
+            $cardUser->setFkIdGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCardUser(CardUser $cardUser): self
+    {
+        if ($this->cardUsers->removeElement($cardUser)) {
+            // set the owning side to null (unless already changed)
+            if ($cardUser->getFkIdGame() === $this) {
+                $cardUser->setFkIdGame(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

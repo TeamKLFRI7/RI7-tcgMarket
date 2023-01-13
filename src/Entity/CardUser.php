@@ -112,7 +112,11 @@ class CardUser
         'cardUser:item:post',
         'cardUser:item:put'
     ])]
-    private ?string $img = null;
+    private array $images = [];
+
+    #[ORM\ManyToOne(inversedBy: 'cardUsers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Game $fkIdGame = null;
 
     public function __construct()
     {
@@ -226,15 +230,28 @@ class CardUser
         return $this;
     }
 
-    public function getImg(): ?string
+    public function getImages(): array
     {
-        return $this->img;
+        return $this->images;
     }
 
-    public function setImg(string $img): self
+    public function setImages(?array $images): self
     {
-        $this->img = $img;
+        $this->images = $images;
 
         return $this;
     }
+
+    public function getFkIdGame(): ?Game
+    {
+        return $this->fkIdGame;
+    }
+
+    public function setFkIdGame(?Game $fkIdGame): self
+    {
+        $this->fkIdGame = $fkIdGame;
+
+        return $this;
+    }
+
 }
