@@ -6,7 +6,7 @@ use App\Entity\CardUser;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class CardUserCrudController extends AbstractCrudController
@@ -23,7 +23,8 @@ class CardUserCrudController extends AbstractCrudController
             TextField::new('name'),
             TextField::new('quality'),
             TextField::new('quality'),
-            ImageField::new('img')
+            IntegerField::new('price'),
+            //ImageField::new('img')
         ];
     }
 }
