@@ -114,6 +114,10 @@ class CardUser
     ])]
     private array $images = [];
 
+    #[ORM\ManyToOne(inversedBy: 'cardUsers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Game $fkIdGame = null;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
@@ -234,6 +238,18 @@ class CardUser
     public function setImages(?array $images): self
     {
         $this->images = $images;
+
+        return $this;
+    }
+
+    public function getFkIdGame(): ?Game
+    {
+        return $this->fkIdGame;
+    }
+
+    public function setFkIdGame(?Game $fkIdGame): self
+    {
+        $this->fkIdGame = $fkIdGame;
 
         return $this;
     }
