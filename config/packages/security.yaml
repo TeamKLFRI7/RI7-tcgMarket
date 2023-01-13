@@ -55,11 +55,11 @@ security:
   access_control:
     - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
-    - { path: ^/api/card_users, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/api/commands, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/api/order_items, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/api/user_infos, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/card_users, roles: ROLE_USER }
+    - { path: ^/api/commands, roles: ROLE_USER }
+    - { path: ^/api/order_items, roles: ROLE_USER }
+    - { path: ^/api/user_infos, roles: ROLE_USER }
+    - { path: ^/api/users, roles: ROLE_USER }
     - { path: ^/api/*, roles: PUBLIC_ACCESS }
     - { path: ^/admin, roles: ROLE_ADMIN }
 
