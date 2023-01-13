@@ -39,21 +39,6 @@ class CardUserRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @return CardUser[]
-     */
-    public function findLast10() :array
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('c')
-            ->from(CardUser::class, 'c')
-            ->orderBy('c.id', 'DESC')
-            ->setMaxResults('a.email = :limit')
-            ->setParameter(':limit', 10)
-        ;
-        return $qb->getQuery()->getResult();
-    }
-
 //    /**
 //     * @return CardUser[] Returns an array of CardUser objects
 //     */

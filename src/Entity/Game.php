@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\Controller\Api\UserController\CardUserController;
+use App\Controller\GameController;
 use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(
+            controller: GameController::class,
             normalizationContext: ['groups' => 'game:series:get'],
         ),
         new GetCollection(
@@ -51,6 +54,9 @@ class Game
     private Collection $cardSeries;
 
     #[ORM\OneToMany(mappedBy: 'fkIdGame', targetEntity: CardUser::class)]
+    #[Groups([
+        'game:series:get',
+    ])]
     private Collection $cardUsers;
 
     #[ORM\Column]
@@ -113,6 +119,7 @@ class Game
     {
         return $this->cardSeries;
     }
+
 
     public function addCardSeries(CardSerie $cardSeries): self
     {

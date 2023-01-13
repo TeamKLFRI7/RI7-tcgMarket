@@ -110,7 +110,8 @@ class CardUser
         'cardInSell:item:get',
         'cardUser:collection:get',
         'cardUser:item:post',
-        'cardUser:item:put'
+        'cardUser:item:put',
+        'game:series:get'
     ])]
     private array $images = [];
 
