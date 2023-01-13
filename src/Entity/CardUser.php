@@ -105,7 +105,13 @@ class CardUser
     ])] 
     private ?CardSet $cardSet = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 255)]
+    #[Groups([
+        'cardInSell:item:get',
+        'cardUser:collection:get',
+        'cardUser:item:post',
+        'cardUser:item:put'
+    ])]
     private array $images = [];
 
     public function __construct()
