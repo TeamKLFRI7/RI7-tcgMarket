@@ -105,14 +105,8 @@ class CardUser
     ])] 
     private ?CardSet $cardSet = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups([
-        'cardInSell:item:get',
-        'cardUser:collection:get',
-        'cardUser:item:post',
-        'cardUser:item:put'
-    ])]
-    private ?string $img = null;
+    #[ORM\Column(nullable: true)]
+    private array $images = [];
 
     public function __construct()
     {
@@ -226,15 +220,16 @@ class CardUser
         return $this;
     }
 
-    public function getImg(): ?string
+    public function getImages(): array
     {
-        return $this->img;
+        return $this->images;
     }
 
-    public function setImg(string $img): self
+    public function setImages(?array $images): self
     {
-        $this->img = $img;
+        $this->images = $images;
 
         return $this;
     }
+
 }
