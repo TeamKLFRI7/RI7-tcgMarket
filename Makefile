@@ -18,7 +18,8 @@ install: ## Init the project
 	$(MAKE) composer-install
 ##	$(MAKE) npm-install
 	$(MAKE) database-init
-	$(MAKE) database-etl-create
+	$(MAKE) etl
+	php bin/console lexik:jwt:generate-keypair
 
 	@$(call GREEN,"The application is available at: http://127.0.0.1:8000/.")
 

@@ -34,7 +34,7 @@ services:
     build: docker
     container_name: web_tcg_market
     ports:
-      - "8008:80"
+      - "8000:80"
     volumes:
       #passe la config des vh dans le container
       - ./docker/vhosts:/etc/apache2/sites-enabled
