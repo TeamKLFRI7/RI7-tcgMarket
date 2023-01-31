@@ -26,7 +26,8 @@ class Card
     #[Groups([
         'cardSet:item:get', 
         'cardSet:collection:get', 
-        'cardInSell:item:get'
+        'cardInSell:item:get',
+        'cardSet:item:get'
     ])]
     private ?int $id = null;
 
