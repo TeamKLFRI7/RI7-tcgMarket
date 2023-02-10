@@ -19,6 +19,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ),
         new GetCollection(
             normalizationContext: ['groups' => 'game:collection:get'],
+        ),
+        new GetCollection(
+            uriTemplate: '/games/sell',
+            normalizationContext: ['groups' => 'game:collection:sell'],
         )
     ]
 )]
@@ -29,14 +33,16 @@ class Game
     #[ORM\Column]
     #[Groups([
         'game:series:get',
-        'game:collection:get'
+        'game:collection:get',
+        'game:collection:sell'
     ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 45)]
     #[Groups([
         'game:series:get',
-        'game:collection:get'
+        'game:collection:get',
+        'game:collection:sell'
     ])]
     private ?string $name = null;
 
@@ -47,7 +53,10 @@ class Game
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'fkIdGame', targetEntity: CardSerie::class)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get',
+        'game:collection:sell'
+    ])]
     private Collection $cardSeries;
 
     #[ORM\OneToMany(mappedBy: 'fkIdGame', targetEntity: CardUser::class)]

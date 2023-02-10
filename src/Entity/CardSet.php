@@ -32,7 +32,8 @@ class CardSet
         'cardSerie:item:get',
         'cardSerie:collection:get',
         'cardSet:item:get',
-        'cardSet:collection:get'
+        'cardSet:collection:get',
+        'game:collection:sell'
     ])]
     private ?int $id = null;
 
@@ -41,7 +42,10 @@ class CardSet
     private Collection $fkIdCardUser;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: Card::class)]
-    #[Groups(['cardSet:item:get'])]
+    #[Groups([
+        'cardSet:item:get',
+        'game:collection:sell'
+    ])]
     private Collection $fkIdCar;
 
     #[ORM\Column(length: 100)]
@@ -59,7 +63,8 @@ class CardSet
         'cardSerie:item:get',
         'cardSerie:collection:get',
         'cardSet:item:get',
-        'cardSet:collection:get'
+        'cardSet:collection:get',
+        'game:collection:sell'
     ])]
     private ?string $setName = null;
 
