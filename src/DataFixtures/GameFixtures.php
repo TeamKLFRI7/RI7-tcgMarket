@@ -14,6 +14,7 @@ class GameFixtures extends Fixture
         $game->setName('Pokemon');
         $game->setCreatedAt(new \DateTimeImmutable());
         $game->setUpdatedAt(new \DateTimeImmutable());
+        $game->setIsActive(1);
         $manager->persist($game);
 
         $manager->flush();
