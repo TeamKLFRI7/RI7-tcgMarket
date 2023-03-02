@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CardRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,9 +18,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => 'cardInSell:item:get'],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'search:item:get'],
+            paginationEnabled: false
         )
     ]
-)]
+),
+ApiFilter(SearchFilter::class, properties: ['name' => 'start'])
+]
 class Card
 {
     #[ORM\Id]
@@ -26,7 +35,8 @@ class Card
     #[Groups([
         'cardSet:item:get', 
         'cardSet:collection:get', 
-        'cardInSell:item:get'
+        'cardInSell:item:get',
+        'search:item:get'
     ])]
     private ?int $id = null;
 
@@ -34,7 +44,8 @@ class Card
     #[Groups([
         'cardSet:item:get', 
         'cardSet:collection:get', 
-        'cardInSell:item:get'
+        'cardInSell:item:get',
+        'search:item:get'
     ])]
     private Collection $fkIdCardUser;
 
@@ -45,14 +56,16 @@ class Card
     #[Groups([
         'cardSet:item:get', 
         'cardSet:collection:get', 
-        'cardInSell:item:get'
+        'cardInSell:item:get',
+        'search:item:get'
     ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     #[Groups([
         'cardSet:item:get', 
-        'cardSet:collection:get'
+        'cardSet:collection:get',
+        'search:item:get'
     ])]
     private ?string $img = null;
 
