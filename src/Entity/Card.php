@@ -27,6 +27,8 @@ class Card
         'cardSet:item:get', 
         'cardSet:collection:get', 
         'cardInSell:item:get',
+        'cardSet:item:get',
+        'cardInSell:item:get',
         'game:collection:sell'
     ])]
     private ?int $id = null;

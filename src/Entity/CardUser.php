@@ -93,7 +93,8 @@ class CardUser
     #[ORM\JoinColumn(nullable: false)]
     #[Groups([
         'cardUser:item:post',
-        'cardUser:item:put'
+        'cardUser:item:put',
+        'cardSet:item:get'
     ])]
     private ?Card $card = null;
 
