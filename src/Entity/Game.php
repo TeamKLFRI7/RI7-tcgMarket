@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\Controller\Api\CreateCardSell;
 use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,6 +20,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ),
         new GetCollection(
             normalizationContext: ['groups' => 'game:collection:get'],
+        ),
+        new GetCollection(
+            uriTemplate: '/sell',
+            controller: CreateCardSell::class,
+            normalizationContext: ['groups' => 'game:collection:sell'],
+            name: 'sell'
         )
     ]
 )]
@@ -29,14 +36,16 @@ class Game
     #[ORM\Column]
     #[Groups([
         'game:series:get',
-        'game:collection:get'
+        'game:collection:get',
+        'game:collection:sell'
     ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 45)]
     #[Groups([
         'game:series:get',
-        'game:collection:get'
+        'game:collection:get',
+        'game:collection:sell'
     ])]
     private ?string $name = null;
 
@@ -47,7 +56,10 @@ class Game
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'fkIdGame', targetEntity: CardSerie::class)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get',
+        'game:collection:sell'
+    ])]
     private Collection $cardSeries;
 
     #[ORM\OneToMany(mappedBy: 'fkIdGame', targetEntity: CardUser::class)]

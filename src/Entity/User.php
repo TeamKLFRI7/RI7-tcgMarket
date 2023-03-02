@@ -93,7 +93,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     #[Groups([
         'user:item:post', 
-        'user:item:put'
     ])]
     private ?string $password = null;
 
@@ -122,6 +121,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phoneNumber = null;
 
     #[ORM\OneToOne(mappedBy: 'fkIdUser', cascade: ['persist', 'remove'])]
+    #[Groups([
+        'user:item:get',
+        'user:item:put'
+    ])]
     private ?UserInfo $userInfo = null;
 
     #[ORM\OneToMany(mappedBy: 'fkIdUser', targetEntity: Command::class)]
