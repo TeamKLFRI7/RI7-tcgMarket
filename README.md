@@ -23,11 +23,11 @@ Pour démarrer la stack, lancer la commande `make up`.
 ## Accéder au front
 
 Le port utilisé est le 8000.
-symfony app : https://127.0.0.1.com:8000
-api app : https://127.0.0.1.com:8000/api
+symfony app : http://127.0.0.1:8000
+api app : http://127.0.0.1:8000/api
 
 Le port utilisé par phpmyadmin est le 8080
-vue phpmyadmin : https://127.0.0.1.com:8080
+vue phpmyadmin : http://127.0.0.1:8080
 
 ## Lancer les tests
 

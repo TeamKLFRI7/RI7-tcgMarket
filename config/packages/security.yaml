@@ -8,8 +8,7 @@ security:
     app_user_provider:
       entity:
         class: App\Entity\User
-        property: email
-    # used to reload user from session & other features (e.g. switch_user)
+        property: userName
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -20,7 +19,7 @@ security:
       provider: app_user_provider
       json_login:
         check_path: /authentication_token
-        username_path: email
+        username_path: userName
         password_path: password
         success_handler: lexik_jwt_authentication.handler.authentication_success
         failure_handler: lexik_jwt_authentication.handler.authentication_failure
@@ -28,18 +27,18 @@ security:
       pattern: ^/api
       stateless: true
       jwt: ~
-    # main:
-      # lazy: true
-      # provider: app_user_provider
-      # form_login:
-      #   login_path: app_login
-      #   check_path: app_login
-      # logout:
-      #   path: app_logout
-      #   target: app_login
-      # remember_me:
-      #   secret: '%kernel.secret%'
-      #   lifetime: 604800
+    main:
+      lazy: true
+      provider: app_user_provider
+      form_login:
+        login_path: app_login
+        check_path: app_login
+      logout:
+        path: app_logout
+        target: app_login
+      remember_me:
+        secret: '%kernel.secret%'
+        lifetime: 604800
     secured_area:
       form_login:
         enable_csrf: true
@@ -52,20 +51,19 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    # - { path: ^/api/handle-stripe-webhook, roles: PUBLIC_ACCESS }
-    # - { path: ^/api/docs, roles: PUBLIC_ACCESS }
-    # - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
-    # - { path: ^/api/register, roles: PUBLIC_ACCESS }
-    # - { path: ^/api/reset-password/*, roles: PUBLIC_ACCESS }
-    # - { path: ^/reset-password/*, roles: PUBLIC_ACCESS }
-    # - { path: ^/api/public/*, roles: PUBLIC_ACCESS }
-    # - { path: ^/public/*, roles: PUBLIC_ACCESS }
-    # - { path: ^/admin/*, roles: ROLE_ADMIN }
+    - { path: ^/api/card_users, roles: ROLE_USER }
+    - { path: ^/api/commands, roles: ROLE_USER }
+    - { path: ^/api/order_items, roles: ROLE_USER }
+    - { path: ^/api/user_infos, roles: ROLE_USER }
+    - { path: ^/api/users, roles: ROLE_USER }
     - { path: ^/api/*, roles: PUBLIC_ACCESS }
-    - { path: ^/, roles: PUBLIC_ACCESS }
-  # - { path: ^/admin, roles: ROLE_ADMIN }
-  # - { path: ^/profile, roles: ROLE_USER }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER
+    ROLE_CUSTOMER: ROLE_USER
 
 when@test:
   security:

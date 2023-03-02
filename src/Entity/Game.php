@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => 'game:series:get'],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => 'game:collection:get'],
         )
     ]
 )]
@@ -23,11 +27,17 @@ class Game
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get',
+        'game:collection:get'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 45)]
-    #[Groups(['game:series:get'])]
+    #[Groups([
+        'game:series:get',
+        'game:collection:get'
+    ])]
     private ?string $name = null;
 
     #[ORM\Column]
@@ -40,9 +50,19 @@ class Game
     #[Groups(['game:series:get'])]
     private Collection $cardSeries;
 
+    #[ORM\OneToMany(mappedBy: 'fkIdGame', targetEntity: CardUser::class)]
+    private Collection $cardUsers;
+
+    #[ORM\Column]
+    #[Groups([
+        'game:collection:get'
+    ])]
+    private ?bool $isActive = null;
+
     public function __construct()
     {
         $this->cardSeries = new ArrayCollection();
+        $this->cardUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +132,48 @@ class Game
                 $cardSeries->setFkIdGame(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CardUser>
+     */
+    public function getCardUsers(): Collection
+    {
+        return $this->cardUsers;
+    }
+
+    public function addCardUser(CardUser $cardUser): self
+    {
+        if (!$this->cardUsers->contains($cardUser)) {
+            $this->cardUsers->add($cardUser);
+            $cardUser->setFkIdGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCardUser(CardUser $cardUser): self
+    {
+        if ($this->cardUsers->removeElement($cardUser)) {
+            // set the owning side to null (unless already changed)
+            if ($cardUser->getFkIdGame() === $this) {
+                $cardUser->setFkIdGame(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

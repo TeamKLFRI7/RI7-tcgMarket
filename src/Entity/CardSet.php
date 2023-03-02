@@ -28,10 +28,10 @@ class CardSet
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups([
-        'game:series:get', 
-        'cardSerie:item:get', 
-        'cardSerie:collection:get', 
-        'cardSet:item:get', 
+        'game:series:get',
+        'cardSerie:item:get',
+        'cardSerie:collection:get',
+        'cardSet:item:get',
         'cardSet:collection:get'
     ])]
     private ?int $id = null;
@@ -46,8 +46,8 @@ class CardSet
 
     #[ORM\Column(length: 100)]
     #[Groups([
-        'game:series:get', 
-        'cardSerie:item:get', 
+        'game:series:get',
+        'cardSerie:item:get',
         'cardSerie:collection:get',
         'cardSet:collection:get'
     ])]
@@ -55,9 +55,9 @@ class CardSet
 
     #[ORM\Column(length: 100)]
     #[Groups([
-        'game:series:get', 
-        'cardSerie:item:get', 
-        'cardSerie:collection:get', 
+        'game:series:get',
+        'cardSerie:item:get',
+        'cardSerie:collection:get',
         'cardSet:item:get',
         'cardSet:collection:get'
     ])]
@@ -65,8 +65,8 @@ class CardSet
 
     #[ORM\Column(length: 255)]
     #[Groups([
-        'game:series:get', 
-        'cardSerie:item:get', 
+        'game:series:get',
+        'cardSerie:item:get',
         'cardSerie:collection:get',
         'cardSet:collection:get',
         'cardSet:item:get'
