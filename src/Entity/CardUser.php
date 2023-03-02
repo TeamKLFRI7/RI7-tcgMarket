@@ -117,6 +117,7 @@ class CardUser
 
     #[ORM\ManyToOne(inversedBy: 'cardUsers')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['cardUser:item:post',])]
     private ?Game $fkIdGame = null;
 
     public function __construct()

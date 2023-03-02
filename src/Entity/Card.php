@@ -27,7 +27,9 @@ class Card
         'cardSet:item:get', 
         'cardSet:collection:get', 
         'cardInSell:item:get',
-        'cardSet:item:get'
+        'cardSet:item:get',
+        'cardInSell:item:get',
+        'game:collection:sell'
     ])]
     private ?int $id = null;
 
@@ -46,14 +48,16 @@ class Card
     #[Groups([
         'cardSet:item:get', 
         'cardSet:collection:get', 
-        'cardInSell:item:get'
+        'cardInSell:item:get',
+        'game:collection:sell'
     ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     #[Groups([
         'cardSet:item:get', 
-        'cardSet:collection:get'
+        'cardSet:collection:get',
+        'game:collection:sell'
     ])]
     private ?string $img = null;
 
