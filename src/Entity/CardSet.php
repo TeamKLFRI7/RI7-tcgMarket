@@ -33,12 +33,11 @@ class CardSet
         'cardSerie:collection:get',
         'cardSet:item:get',
         'cardSet:collection:get',
-        'game:collection:sell'
+        'game:collection:sell',
     ])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: CardUser::class)]
-    #[Groups(['cardUser:item:post'])]
     private Collection $fkIdCardUser;
 
     #[ORM\OneToMany(mappedBy: 'cardSet', targetEntity: Card::class)]

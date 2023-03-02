@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\Controller\Api\CreateCardSell;
 use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,8 +22,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
             normalizationContext: ['groups' => 'game:collection:get'],
         ),
         new GetCollection(
-            uriTemplate: '/games/sell',
+            uriTemplate: '/sell',
+            controller: CreateCardSell::class,
             normalizationContext: ['groups' => 'game:collection:sell'],
+            name: 'sell'
         )
     ]
 )]
