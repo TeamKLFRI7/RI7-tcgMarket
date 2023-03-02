@@ -29,7 +29,8 @@ class CardSerie
     #[ORM\Column]
     #[Groups([
         'cardSerie:item:get', 
-        'cardSerie:collection:get'
+        'cardSerie:collection:get',
+        'game:collection:sell'
     ])]
     private ?int $id = null;
 
@@ -37,7 +38,8 @@ class CardSerie
     #[Groups([
         'game:series:get', 
         'cardSerie:item:get', 
-        'cardSerie:collection:get'
+        'cardSerie:collection:get',
+        'game:collection:sell'
     ])]
     private Collection $fkIdCardSet;
 
@@ -53,13 +55,13 @@ class CardSerie
     #[Groups([
         'game:series:get', 
         'cardSerie:item:get', 
-        'cardSerie:collection:get'
+        'cardSerie:collection:get',
+        'game:collection:sell'
     ])]
     private ?string $serieName = null;
 
     #[ORM\Column(length: 255)]
     #[Groups([
-        'game:series:get', 
         'cardSerie:item:get', 
         'cardSerie:collection:get'
     ])]

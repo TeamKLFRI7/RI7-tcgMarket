@@ -36,7 +36,8 @@ class Card
         'cardSet:item:get', 
         'cardSet:collection:get', 
         'cardInSell:item:get',
-        'search:item:get'
+        'search:item:get',
+//        'game:collection:sell'
     ])]
     private ?int $id = null;
 
@@ -57,7 +58,8 @@ class Card
         'cardSet:item:get', 
         'cardSet:collection:get', 
         'cardInSell:item:get',
-        'search:item:get'
+        'search:item:get',
+//        'game:collection:sell'
     ])]
     private ?string $name = null;
 
@@ -65,7 +67,8 @@ class Card
     #[Groups([
         'cardSet:item:get', 
         'cardSet:collection:get',
-        'search:item:get'
+        'search:item:get',
+//        'game:collection:sell'
     ])]
     private ?string $img = null;
 
