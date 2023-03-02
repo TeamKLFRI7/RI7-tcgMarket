@@ -62,7 +62,6 @@ class CardSerie
 
     #[ORM\Column(length: 255)]
     #[Groups([
-        'game:series:get', 
         'cardSerie:item:get', 
         'cardSerie:collection:get'
     ])]
