@@ -10,12 +10,15 @@ class GameFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $game = new Game();
-        $game->setName('Pokemon');
-        $game->setCreatedAt(new \DateTimeImmutable());
-        $game->setUpdatedAt(new \DateTimeImmutable());
-        $game->setIsActive(1);
-        $manager->persist($game);
+        $games = ['Pokemon', 'Magic', 'YuGiHo'];
+        foreach ($games as $gameName) {
+            $game = new Game();
+            $game->setName($gameName);
+            $game->setCreatedAt(new \DateTimeImmutable());
+            $game->setUpdatedAt(new \DateTimeImmutable());
+            $gameName === 'Pokemon' ? $game->setIsActive(1) : $game->setIsActive(0);
+            $manager->persist($game);
+        }
 
         $manager->flush();
     }
