@@ -5,11 +5,13 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 
 use App\Controller\MeController;
+use App\Controller\UserController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -35,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(
             denormalizationContext: ['groups' => 'user:item:post'],
         ),
-        new Put(
+        new Patch(
             denormalizationContext: ['groups' => 'user:item:put']
         ),
         new Delete(
@@ -85,12 +87,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ])]
     private array $roles = [];
 
+    #[Assert\Regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/')]
     private ?string $plainPassword = null;
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column(length: 255)]
+    #[Assert\Regex('/^\$2[aby]\$[0-9]{2}\$[A-Za-z0-9\/\.]{53}$/')]
     #[Groups([
         'user:item:post', 
     ])]

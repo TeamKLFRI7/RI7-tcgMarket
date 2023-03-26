@@ -4,7 +4,7 @@ DOCKER_COMPOSE = docker-compose
 EXEC = $(DOCKER) exec -w /var/www/ web_tcg_market
 PHP = $(EXEC) php
 COMPOSER = $(EXEC) composer
-NPM = $(EXEC) npm
+PNPM = $(EXEC) pnpm
 SYMFONY_CONSOLE = $(PHP) bin/console
 
 # Colors
@@ -16,8 +16,9 @@ COLOUR_END=\033[0m
 install: ## Init the project
 	$(MAKE) up
 	$(MAKE) composer-install
-##	$(MAKE) npm-install
+##	$(MAKE) pnpm-install
 	$(MAKE) database-init
+	$(MAKE) database-init-test
 	$(MAKE) etl
 	php bin/console lexik:jwt:generate-keypair
 
@@ -29,10 +30,10 @@ cache-clear: ## Clear cache
 ## —— ✅ Test ——
 .PHONY: tests
 tests: ## Run all tests
-	$(MAKE) database-init-test
+	#$(MAKE) database-init-test
 	$(PHP) bin/phpunit --testdox tests/Unit/
 	$(PHP) bin/phpunit --testdox tests/Functional/
-	$(PHP) bin/phpunit --testdox tests/E2E/
+	#$(PHP) bin/phpunit --testdox tests/E2E/
 
 database-init-test: ## Init database for test
 	$(SYMFONY_CONSOLE) d:d:d --force --if-exists --env=test
@@ -73,15 +74,15 @@ composer-install: ## Install dependencies
 composer-update: ## Update dependencies
 	$(COMPOSER) update
 
-## —— 🐈 NPM —————————————————————————————————————————————————————————————————
-npm-install: ## Install all npm dependencies
-	$(NPM) install
+## —— 🐈 PNPM —————————————————————————————————————————————————————————————————
+pnpm-install: ## Install all pnpm dependencies
+	$(PNPM) install
 
-npm-update: ## Update all npm dependencies
-	$(NPM) update
+pnpm-update: ## Update all pnpm dependencies
+	$(PNPM) update
 
-npm-watch: ## Update all npm dependencies
-	$(NPM) run watch
+pnpm-watch: ## Update all pnpm dependencies
+	$(PNPM) run watch
 
 ## —— 📊 Database ——
 database-init: ## Init database

@@ -29,6 +29,7 @@ class UserController extends AbstractController
         $user->setUserName($data['userName']);
         $user->setEmail($data['email']);
         $user->setPhoneNumber($data['phoneNumber']);
+        $user->setPlainPassword($data["password"]);
         $hashedPassword = $passwordHasher->hashPassword(
             $user,
             $data['password']
@@ -47,6 +48,7 @@ class UserController extends AbstractController
         // If the data is valid, send it to the repository
         $this->em->persist($user);
         $this->em->flush();
+
         return  $this->json($user);
     }
 
