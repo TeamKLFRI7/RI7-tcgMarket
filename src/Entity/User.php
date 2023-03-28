@@ -116,7 +116,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $userName = null;
 
     #[ORM\Column(length: 15)]
-    #[Assert\Regex('^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^')]
+    #[Assert\Regex(
+        '^((\+|00)33\s?|0)[67](\s?\d{2}){4}$^',
+        message: 'Format non valide commencez par 06 ou 07 suivis de de 8 chiffres'
+    )]
     #[Groups([
         'user:item:post', 
         'user:item:get',

@@ -27,7 +27,7 @@ class RegisterControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/api/register',[],[],[], json_encode($data));
         $responseContent = $client->getResponse()->getContent();
-        $this->assertStringContainsString( '.phoneNumber:\n    This value is not valid.', $responseContent);
+        $this->assertStringContainsString( '{"phoneNumber":"Format non valide commencez par 06 ou 07 suivis de de 8 chiffres"}', $responseContent);
     }
 
     public function testPasswordIsNotValid(){
@@ -40,7 +40,7 @@ class RegisterControllerTest extends WebTestCase
         $client = static::createClient();
         ($client->request('POST', '/api/register',[],[],[], json_encode($data)));
         $responseContent = $client->getResponse()->getContent();
-        $this->assertStringContainsString( '.plainPassword:\n    This value is not valid.', $responseContent);
+        $this->assertStringContainsString( '{"plainPassword":"Mot de passe non valide"}', $responseContent);
     }
 
     public function testEmailIsNotValid(){
@@ -53,7 +53,7 @@ class RegisterControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/api/register',[],[],[], json_encode($data));
         $responseContent = $client->getResponse()->getContent();
-        $this->assertStringContainsString( 'This value is not a valid email address.', $responseContent);
+        $this->assertStringContainsString( '{"email":"format non valide"}', $responseContent);
     }
 
 }

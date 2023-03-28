@@ -66,15 +66,4 @@ class UserController extends AbstractController
 
         return  $this->json($user);
     }
-
-
-    // public function delete(UserPasswordHasherInterface $passwordHasher, UserInterface $user)
-    // {
-    //     // ... e.g. get the password from a "confirm deletion" dialog
-    //     $plaintextPassword = ...;
-
-    //     if (!$passwordHasher->isPasswordValid($user, $plaintextPassword)) {
-    //         throw new AccessDeniedHttpException();
-    //     }
-    // }
 }
