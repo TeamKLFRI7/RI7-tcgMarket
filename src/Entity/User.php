@@ -7,11 +7,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 
 use App\Controller\MeController;
-use App\Controller\UserController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,7 +22,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[UniqueEntity('email', 'userName')]
+#[UniqueEntity(fields: 'email', message :'Cet Email est déjà utilisé')]
+#[UniqueEntity(fields: 'userName', message :'Ce nom est déjà pris')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     operations: [
@@ -68,7 +67,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\Email]
+    #[Assert\Email(message: 'format non valide')]
     #[Groups([
         'user:item:post', 
         'user:item:get',
@@ -87,7 +86,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ])]
     private array $roles = [];
 
-    #[Assert\Regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/')]
+    #[Assert\Regex(
+        pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+        message: 'Mot de passe non valide'
+    )]
     private ?string $plainPassword = null;
 
     /**
@@ -101,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 100)]
-    #[Assert\Length(min: 3, max: 16)]
+    #[Assert\Length(min: 3, max: 16, minMessage: '3 caractère minimum', maxMessage: '16 caractère maximum')]
     #[Groups([
         'cardUser:item:get', 
         'cardInSell:item:get', 
