@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class CreateCardSell extends AbstractController
+class GetAllCardsController extends AbstractController
 {
 
     public function __construct(

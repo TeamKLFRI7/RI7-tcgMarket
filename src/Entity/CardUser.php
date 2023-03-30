@@ -3,18 +3,21 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Delete;
 use App\Repository\CardUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: CardUserRepository::class)]
+#[Vich\Uploadable]
 #[ApiResource(
     operations: [
         new Get(
@@ -23,16 +26,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             normalizationContext: ['groups' => 'cardUser:collection:get']
         ),
-        new Post(
-            denormalizationContext:['groups' => 'cardUser:item:post']
-        ),
         new Put(
             denormalizationContext:['groups' => 'cardUser:item:put']
         ),
         new Delete(
             normalizationContext:['groups' => 'cardUser:item:delete']
         )
-    ]
+    ],
 )]
 class CardUser
 {
@@ -54,7 +54,6 @@ class CardUser
         'cardUser:item:get', 
         'cardInSell:item:get',
         'cardUser:collection:get',
-        'cardUser:item:post',
         'cardUser:item:put'
     ])]
     private ?User $fkIdUser = null;
@@ -64,7 +63,8 @@ class CardUser
         'cardInSell:item:get',
         'cardUser:collection:get',
         'cardUser:item:post',
-        'cardUser:item:put'
+        'cardUser:item:put',
+        'cardUser:item:get'
     ])]
     private ?string $name = null;
 
@@ -73,7 +73,8 @@ class CardUser
         'cardInSell:item:get',
         'cardUser:collection:get',
         'cardUser:item:post',
-        'cardUser:item:put'
+        'cardUser:item:put',
+        'cardUser:item:get'
     ])]
     private ?string $quality = null;
 
@@ -82,7 +83,8 @@ class CardUser
         'cardInSell:item:get',
         'cardUser:collection:get',
         'cardUser:item:post',
-        'cardUser:item:put'
+        'cardUser:item:put',
+        'cardUser:item:get'
     ])]
     private ?float $price = null;
 
@@ -92,7 +94,6 @@ class CardUser
     #[ORM\ManyToOne(inversedBy: 'fkIdCardUser')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups([
-        'cardUser:item:post',
         'cardUser:item:put',
         'cardSet:item:get'
     ])]
@@ -100,24 +101,27 @@ class CardUser
 
     #[ORM\ManyToOne(inversedBy: 'fkIdCardUser')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups([
-        'cardUser:item:post',
-        'cardUser:item:put'
-    ])] 
+    #[Groups(['cardUser:item:put'])]
     private ?CardSet $cardSet = null;
 
-    #[ORM\Column(length: 255)]
     #[Groups([
         'cardInSell:item:get',
-        'cardUser:collection:get',
-        'cardUser:item:post',
-        'cardUser:item:put'
+        'cardUser:item:get'
     ])]
-    private array $images = [];
+    public ?string $fileUrl = null;
+
+    #[Vich\UploadableField(mapping: "images_upload", fileNameProperty: "fileName")]
+//    #[Groups([
+//        'cardUser:item:post',
+//        'cardUser:item:put'
+//    ])]
+    private ?File $file = null;
+
+    #[ORM\Column(nullable: false)]
+    public ?string $fileName = null;
 
     #[ORM\ManyToOne(inversedBy: 'cardUsers')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['cardUser:item:post',])]
     private ?Game $fkIdGame = null;
 
     public function __construct()
@@ -232,14 +236,38 @@ class CardUser
         return $this;
     }
 
-    public function getImages(): array
+    public function getFileUrl(): ?string
     {
-        return $this->images;
+        return $this->fileUrl;
     }
 
-    public function setImages(?array $images): self
+    public function setFileUrl(?string $fileUrl): self
     {
-        $this->images = $images;
+        $this->fileUrl = $fileUrl;
+
+        return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    public function setFileName(?string $fileName): self
+    {
+        $this->fileName = $fileName;
 
         return $this;
     }
@@ -255,5 +283,4 @@ class CardUser
 
         return $this;
     }
-
 }

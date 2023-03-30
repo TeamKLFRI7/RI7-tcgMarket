@@ -20,8 +20,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             normalizationContext: ['groups' => 'cardInSell:item:get'],
         ),
         new GetCollection(
-            normalizationContext: ['groups' => 'search:item:get'],
-            paginationEnabled: false
+            paginationEnabled: false,
+            normalizationContext: ['groups' => 'search:item:get']
         )
     ]
 ),
