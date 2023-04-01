@@ -17,19 +17,25 @@ class CardHandler
     // Vérifie si la card série existe dans la DB en se basant sur le serieName
     public function isCardSerieExist(string $cardSerieName) : ?CardSerie
     {
-         $serieName = $this->em->getRepository(CardSerie::class)->findOneBy([
-            'serieName' => $cardSerieName
-        ]);
-        return $serieName;
+        return $this->em->getRepository(CardSerie::class)->findOneBy([
+           'serieName' => $cardSerieName
+       ]);
     }
 
     // Véfifie si le card set existe dans la DB en se basant sur l'id du sert donnée par l'API
     public function isCardSetExist(string $cardSetId) : ?CardSet
     {
-       $setId = $this->em->getRepository(CardSet::class)->findOneBy([
-            'apiSetId' => $cardSetId
+        return $this->em->getRepository(CardSet::class)->findOneBy([
+             'apiSetId' => $cardSetId
+         ]);
+    }
+
+    // Véfifie si la card existe dans la DB en se basant sur l'id du sert donnée par l'API
+    public function isCardExist(string $apiCardId) : ?Card
+    {
+        return $this->em->getRepository(Card::class)->findOneBy([
+            'apiCardId' => $apiCardId
         ]);
-        return $setId;
     }
 
     public function createCardSetFromData($data)
@@ -71,16 +77,21 @@ class CardHandler
         }
 
         // CARD HANDLING
-        $card = new Card();
-        $card->setCardSet($card_set);
-        $card->setApiCardId($data['id']);
-        $card->setName($data['name']);
-        $card->setImg($data['images']['large']);
-        $card->setLink('no link');
-        if (array_key_exists('cardmarket', $data) == true) {
-            $card->setLink($data['cardmarket']['url']);
+        $cardId = $data['id'];
+        // Vérifie si la carte existe
+        $card_id = $this->isCardExist($cardId);
+        if (!$card_id) {
+            $card = new Card();
+            $card->setCardSet($card_set);
+            $card->setApiCardId($data['id']);
+            $card->setName($data['name']);
+            $card->setImg($data['images']['large']);
+            $card->setLink('no link');
+            if (array_key_exists('cardmarket', $data) == true) {
+                $card->setLink($data['cardmarket']['url']);
+            }
+            $this->em->persist($card);
         }
-        $this->em->persist($card);
 
         $this->em->flush();
         $this->em->clear();

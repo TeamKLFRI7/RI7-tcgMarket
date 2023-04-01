@@ -15,7 +15,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
     name: 'card:main',
-    description: 'Test ETL',
+    description: 'ETL - Extract data from Pokemon cards API and load them in our database.',
     hidden: false,
 )]
 class SetCardNameCommand extends Command
@@ -51,7 +51,6 @@ class SetCardNameCommand extends Command
         ]);
 
         while ($nb <= $maxPages['pageSize']) {
-            
             $output->writeln([
                 ' ',
                 'actual Page : '. $nb . '/' . $maxPages['pageSize'],
@@ -61,14 +60,11 @@ class SetCardNameCommand extends Command
                 'headers' => [
                     'Accept' => 'application/json',
                     'x-api-key' => '4ec1c77f-f189-4bbe-9544-cae6f803fcc7'
-                    ,
-                ],
+                ]
             ]);
     
             $pokemons = $response->toArray();
-
-            if (sizeof($pokemons['data']) > 1) {
-
+            if (count($pokemons['data']) > 1) {
                 $progressBar = new ProgressBar($output, sizeof($pokemons['data']));
                 $progressBar->setFormat('debug');
                 $progressBar->start();
@@ -79,21 +75,19 @@ class SetCardNameCommand extends Command
                     $this->em->clear();
                     unset($pokemon);
                 }
-
                 sleep(1);
-                $nb += 1;
+                $nb++;
 
                 $progressBar->finish();
-                
             } else {
                 break;
             }
-        };
+        }
 
         $output->writeln([
             '',
             'End ETL',
-            '============',
+            '============'
         ]);
 
         return Command::SUCCESS;
