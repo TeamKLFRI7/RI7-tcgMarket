@@ -6,7 +6,6 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\CardUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -111,10 +110,6 @@ class CardUser
     public ?string $fileUrl = null;
 
     #[Vich\UploadableField(mapping: "images_upload", fileNameProperty: "fileName")]
-//    #[Groups([
-//        'cardUser:item:post',
-//        'cardUser:item:put'
-//    ])]
     private ?File $file = null;
 
     #[ORM\Column(nullable: false)]

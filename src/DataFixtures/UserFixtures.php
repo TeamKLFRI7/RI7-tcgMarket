@@ -12,12 +12,13 @@ class UserFixtures extends Fixture{
 
     private $hasher;
 
-    public function __construct(UserPasswordHasherInterface $hasher){
-
+    public function __construct(UserPasswordHasherInterface $hasher)
+    {
         $this->hasher = $hasher;
     }
 
-    public function load(ObjectManager $manager): void{
+    public function load(ObjectManager $manager): void
+    {
         // $product = new Product();
         // $manager->persist($product);
 

@@ -31,7 +31,6 @@ class CreateSellController extends AbstractController
         $data = $request->request->all();
         $file = $request->files->get('file');
 
-
         if (!$file) {
             throw new BadRequestHttpException('Une image est obligatoire');
         }
@@ -49,18 +48,19 @@ class CreateSellController extends AbstractController
         $fkIdGame = $this->gameRepository->find($fkIdGameId);
         $cardSet = $this->cardSetRepository->find($cardSetId);
 
-        $cardUser = new cardUser();
-        $cardUser->setName($name);
-        $cardUser->setQuality($quality);
-        $cardUser->setCard($card);
-        $cardUser->setFkIdUser($fkIdUser);
-        $cardUser->setFkIdGame($fkIdGame);
-        $cardUser->setCardSet($cardSet);
-        $cardUser->setPrice($price);
-        $cardUser->setFile($file);
+        $cardUser = (new cardUser())
+            ->setName($name)
+            ->setQuality($quality)
+            ->setCard($card)
+            ->setFkIdUser($fkIdUser)
+            ->setFkIdGame($fkIdGame)
+            ->setCardSet($cardSet)
+            ->setPrice($price)
+            ->setFile($file)
+        ;
 
-        $this->em->persist($cardUser);
-        $this->em->flush();
+        $this->em->persist($cardUser); //Dire à doctrine de prendre en compte les modifs
+        $this->em->flush(); //Ecrit les modifs en base de données
 
         return  $this->json($cardUser);
     }

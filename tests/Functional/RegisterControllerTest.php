@@ -38,7 +38,7 @@ class RegisterControllerTest extends WebTestCase
             'password' => 'Azerty123',
         ];
         $client = static::createClient();
-        ($client->request('POST', '/api/register',[],[],[], json_encode($data)));
+        $client->request('POST', '/api/register',[],[],[], json_encode($data));
         $responseContent = $client->getResponse()->getContent();
         $this->assertStringContainsString( '{"plainPassword":"Mot de passe non valide"}', $responseContent);
     }

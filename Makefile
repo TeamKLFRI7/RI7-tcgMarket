@@ -30,7 +30,7 @@ cache-clear: ## Clear cache
 ## —— ✅ Test ——
 .PHONY: tests
 tests: ## Run all tests
-	#$(MAKE) database-init-test
+	$(MAKE) database-init-test
 	$(PHP) bin/phpunit --testdox tests/Unit/
 	$(PHP) bin/phpunit --testdox tests/Functional/
 	#$(PHP) bin/phpunit --testdox tests/E2E/
