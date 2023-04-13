@@ -5,9 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Put;
 
 use App\Controller\MeController;
 use App\Repository\UserRepository;
@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(
             denormalizationContext: ['groups' => 'user:item:post'],
         ),
-        new Patch(
+        new Put(
             denormalizationContext: ['groups' => 'user:item:put']
         ),
         new Delete(
