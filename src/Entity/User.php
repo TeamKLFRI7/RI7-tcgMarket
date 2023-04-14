@@ -7,9 +7,10 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Put;
 
+use ApiPlatform\Metadata\Put;
 use App\Controller\MeController;
+use App\Controller\UpdateUserController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,7 +38,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             denormalizationContext: ['groups' => 'user:item:post'],
         ),
         new Put(
-            denormalizationContext: ['groups' => 'user:item:put']
+            uriTemplate: '/updateUser',
+            controller: UpdateUserController::class,
+            denormalizationContext: ['groups' => 'user:item:put'],
+            name: 'updateUser'
         ),
         new Delete(
             normalizationContext: ['groups' => 'user:item:delete']
