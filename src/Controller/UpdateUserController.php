@@ -36,31 +36,22 @@ class UpdateUserController extends AbstractController
         $user->setPhoneNumber($data['phoneNumber']);
 
         $userInfo = $user->getUserInfo();
+
         if (!$userInfo) {
-
-            $userInfo = (new UserInfo())
-                ->setFkIdUser($user)
-                ->setCity($data['city'])
-                ->setCountry($data['country'])
-                ->setAddress($data['address'])
-                ->setDescription($data['description'])
-                ->setDeliveryAddress($data['deliveryAddress'])
-                ->setPostalCode($data['postalCode']);
-
+            $userInfo = new UserInfo();
             $user->setUserInfo($userInfo);
-
-        } else {
-            $userInfo->setCity($data['city']);
-            $userInfo->setCountry($data['country']);
-            $userInfo->setAddress($data['address']);
-            $userInfo->setDescription($data['description']);
-            $userInfo->setDeliveryAddress($data['deliveryAddress']);
-            $userInfo->setPostalCode($data['postalCode']);
         }
+
+        $userInfo->setCity($data['city']);
+        $userInfo->setCountry($data['country']);
+        $userInfo->setAddress($data['address']);
+        $userInfo->setDescription($data['description']);
+        $userInfo->setDeliveryAddress($data['deliveryAddress']);
+        $userInfo->setPostalCode($data['postalCode']);
 
 
         $this->entityManager->flush();
 
-        return new JsonResponse(['success' => true]);
+        return $this->json($user);
     }
 }
