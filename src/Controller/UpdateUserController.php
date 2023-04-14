@@ -28,7 +28,7 @@ class UpdateUserController extends AbstractController
         $user = $this->userRepository->find($userId);
 
         if (!$user) {
-            throw new BadRequestHttpException('Invalid user ID');
+            throw new BadRequestHttpException('Id non valide');
         }
 
         $user->setUsername($data['userName']);
